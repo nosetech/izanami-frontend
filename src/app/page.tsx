@@ -1,6 +1,15 @@
+import { getClient } from '@/graphql/client'
+import { GetUsersDocument, GetUsersQuery } from '@/graphql/generated/components'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
-export default function Home() {
+export default async function Home() {
+  const { data: queryData } = await getClient().query<GetUsersQuery>({
+    query: GetUsersDocument,
+  })
+
+  const users = [...queryData.users]
+  console.log(users)
+
   return (
     <Stack
       height='100lvh'
