@@ -1,15 +1,11 @@
-// import { getClient } from '@/graphql/client'
-// import { GetUsersDocument, GetUsersQuery } from '@/graphql/generated/components'
+import { getUsers } from '@/hooks/useUsers'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
-//export default async function Home() {
 export default function Home() {
-  // const { data: queryData } = await getClient().query<GetUsersQuery>({
-  //   query: GetUsersDocument,
-  // })
-  //
-  // const users = [...queryData.users]
-  // console.log(users)
+  ;(async () => {
+    const users = await getUsers()
+    console.log(users)
+  })()
 
   return (
     <Stack
