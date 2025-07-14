@@ -3,7 +3,7 @@ import { Button, Stack, TextField, Typography } from '@mui/material'
 
 export default async function Home() {
   const users = await getUsers()
-  //  console.log(users)
+  console.log(users)
 
   return (
     <Stack

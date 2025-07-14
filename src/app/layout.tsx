@@ -1,3 +1,4 @@
+import { ApolloClientWrapper } from '@/graphql/ApolloClientWrapper'
 import { defaultTheme } from '@/theme/default'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -14,7 +15,7 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={defaultTheme}>
             <CssBaseline />
-            {children}
+            <ApolloClientWrapper>{children}</ApolloClientWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

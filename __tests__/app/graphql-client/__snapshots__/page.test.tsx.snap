@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`GraphQL Client renders page unchanged 1`] = `
+<div>
+  <p>
+    data received during Page render
+  </p>
+  <p />
+</div>
+`;
