@@ -1,11 +1,9 @@
 import { getUsers } from '@/hooks/useUsers'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
-export default function Home() {
-  ;(async () => {
-    const users = await getUsers()
-    console.log(users)
-  })()
+export default async function Home() {
+  const users = await getUsers()
+  //  console.log(users)
 
   return (
     <Stack
