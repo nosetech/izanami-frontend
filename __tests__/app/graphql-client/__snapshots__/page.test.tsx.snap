@@ -5,6 +5,8 @@ exports[`GraphQL Client renders page unchanged 1`] = `
   <p>
     data received during Page render
   </p>
-  <p />
+  <p>
+    {"users":[{"id":1,"name":"Test User","email":"test@example.com","__typename":"User"}]}
+  </p>
 </div>
 `;

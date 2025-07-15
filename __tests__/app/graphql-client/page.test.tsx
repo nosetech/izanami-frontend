@@ -4,14 +4,31 @@ import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import renderer from 'react-test-renderer'
 
-jest.mock('@apollo/client', () => ({
-  ...jest.requireActual('@apollo/client'),
-  useSuspenseQuery: jest.fn().mockResolvedValue({
-    data: { id: '1', name: 'Test User', email: 'test@example.com' },
-  }),
-}))
+jest.mock('@apollo/client', () => {
+  const actual = jest.requireActual('@apollo/client')
+  return {
+    ...actual,
+    useSuspenseQuery: jest.fn(),
+  }
+})
 
 describe('GraphQL Client', () => {
+  beforeEach(() => {
+    ;(useSuspenseQuery as jest.Mock).mockReturnValue({
+      data: {
+        users: [
+          // 配列形式で返す
+          {
+            id: 1,
+            name: 'Test User',
+            email: 'test@example.com',
+            __typename: 'User',
+          },
+        ],
+      },
+    })
+  })
+
   it('renders a content', async () => {
     render(<Home />)
 
@@ -19,9 +36,12 @@ describe('GraphQL Client', () => {
       expect(
         screen.getByText('data received during Page render'),
       ).toBeInTheDocument()
-      //    expect(screen.getByText('{"id":1}')).toBeInTheDocument()
-      expect(useSuspenseQuery).toHaveBeenCalled()
     })
+    expect(
+      screen.getByText(
+        '{"users":[{"id":1,"name":"Test User","email":"test@example.com","__typename":"User"}]}',
+      ),
+    ).toBeInTheDocument()
   })
 
   it('renders page unchanged', async () => {
