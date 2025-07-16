@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Home renders homepage unchanged 1`] = `
+exports[`Page renders homepage unchanged 1`] = `
 <div
   className="MuiStack-root css-1b7iwoq-MuiStack-root"
 >
@@ -17,14 +17,23 @@ exports[`Home renders homepage unchanged 1`] = `
   >
     <div
       className="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
+      onKeyDown={[Function]}
+      ref={[Function]}
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink={false}
         htmlFor="«r0»"
         id="«r0»-label"
       >
         メールアドレス
+        <span
+          aria-hidden={true}
+          className="MuiFormLabel-asterisk MuiInputLabel-asterisk css-1ljffdk-MuiFormLabel-asterisk"
+        >
+           
+          *
+        </span>
       </label>
       <div
         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-quhxjy-MuiInputBase-root-MuiOutlinedInput-root"
@@ -32,16 +41,18 @@ exports[`Home renders homepage unchanged 1`] = `
       >
         <input
           aria-invalid={false}
+          autoComplete="email"
           autoFocus={false}
           className="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
           disabled={false}
           id="«r0»"
+          name="email"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
           ref={[Function]}
-          required={false}
+          required={true}
           type="text"
         />
         <fieldset
@@ -53,6 +64,8 @@ exports[`Home renders homepage unchanged 1`] = `
           >
             <span>
               メールアドレス
+               
+              *
             </span>
           </legend>
         </fieldset>
@@ -60,14 +73,23 @@ exports[`Home renders homepage unchanged 1`] = `
     </div>
     <div
       className="MuiFormControl-root MuiTextField-root css-1xp5r68-MuiFormControl-root-MuiTextField-root"
+      onKeyDown={[Function]}
+      ref={[Function]}
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink={false}
         htmlFor="«r1»"
         id="«r1»-label"
       >
         パスワード
+        <span
+          aria-hidden={true}
+          className="MuiFormLabel-asterisk MuiInputLabel-asterisk css-1ljffdk-MuiFormLabel-asterisk"
+        >
+           
+          *
+        </span>
       </label>
       <div
         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-quhxjy-MuiInputBase-root-MuiOutlinedInput-root"
@@ -75,17 +97,19 @@ exports[`Home renders homepage unchanged 1`] = `
       >
         <input
           aria-invalid={false}
+          autoComplete="current-password"
           autoFocus={false}
           className="MuiInputBase-input MuiOutlinedInput-input css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input"
           disabled={false}
           id="«r1»"
+          name="password"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
           ref={[Function]}
-          required={false}
-          type="text"
+          required={true}
+          type="password"
         />
         <fieldset
           aria-hidden={true}
@@ -96,6 +120,8 @@ exports[`Home renders homepage unchanged 1`] = `
           >
             <span>
               パスワード
+               
+              *
             </span>
           </legend>
         </fieldset>
@@ -103,8 +129,9 @@ exports[`Home renders homepage unchanged 1`] = `
     </div>
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-74d805-MuiButtonBase-root-MuiButton-root"
-      disabled={null}
+      disabled={false}
       onBlur={[Function]}
+      onClick={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}
       onFocus={[Function]}
@@ -118,8 +145,16 @@ exports[`Home renders homepage unchanged 1`] = `
       onTouchStart={[Function]}
       ref={[Function]}
       tabIndex={0}
-      type="button"
+      type="submit"
     >
+      <span
+        className="MuiButton-loadingWrapper"
+        style={
+          {
+            "display": "contents",
+          }
+        }
+      />
       ログイン
     </button>
   </form>

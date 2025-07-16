@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write src",
+    "format:check": "prettier --check src",
     "codegen": "graphql-codegen --require dotenv/config --config ./src/graphql/codegen.ts dotenv_config_path=.env.local",
     "test": "jest",
     "test:updateSnapshot": "jest --updateSnapshot"
@@ -18,13 +19,20 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^5.1.1",
     "@mui/icons-material": "^7.1.2",
     "@mui/material": "^7.1.2",
     "@mui/material-nextjs": "^7.1.1",
+    "axios": "^1.10.0",
+    "axios-hooks": "^5.1.1",
     "graphql": "^16.11.0",
+    "js-cookie": "^3.0.5",
+    "lru-cache": "^11.1.0",
     "next": "15.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.60.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -37,6 +45,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
