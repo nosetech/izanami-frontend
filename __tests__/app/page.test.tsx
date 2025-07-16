@@ -1,39 +1,25 @@
+import Page from '@/app/page'
 import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
-import React from 'react'
 import renderer from 'react-test-renderer'
 
-const Home = React.lazy(() => import('@/app/page'))
+const mockedUseRouter = jest.fn()
 
-describe('Home', () => {
-  beforeEach(() => {
-    jest.mock('../../src/hooks/useUsers', () => ({
-      getUsers: jest
-        .fn()
-        .mockResolvedValue([
-          { id: '1', name: 'Test User', email: 'test@example.com' },
-        ]),
-    }))
-  })
+jest.mock('next/navigation', () => ({
+  useRouter: () => mockedUseRouter(),
+  usePathname: jest.fn().mockReturnValue('/graphql-client'),
+}))
 
-  it('renders a heading', async () => {
-    render(
-      <React.Suspense fallback={<div>loading...</div>}>
-        <Home />
-      </React.Suspense>,
-    )
+// TODO: テストコードはまだサンプルの実装の状態。画面実装完了後にテストコードも整備する。
+describe('Page', () => {
+  it('renders a heading', () => {
+    render(<Page />)
 
-    await waitFor(() =>
-      expect(screen.getByText('ログインフォーム')).toBeInTheDocument(),
-    )
+    expect(screen.getByText('ログインフォーム')).toBeInTheDocument()
   })
 
   it('renders homepage unchanged', async () => {
-    const component = renderer.create(
-      <React.Suspense fallback={<div>loading...</div>}>
-        <Home />
-      </React.Suspense>,
-    )
+    const component = renderer.create(<Page />)
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
