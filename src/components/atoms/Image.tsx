@@ -5,8 +5,8 @@ export type ImageProps = BoxProps & {
   src: string
   alt: string
   loading?: 'eager' | 'lazy'
-  width?: number
-  height?: number
+  width: number
+  height: number
 }
 
 export const Image = (props: ImageProps) => {

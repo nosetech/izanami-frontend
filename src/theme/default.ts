@@ -1,5 +1,5 @@
 'use client'
-import { blue, cyan, green, pink, red, yellow } from '@mui/material/colors'
+import { cyan, green, pink, red, yellow } from '@mui/material/colors'
 import { createTheme } from '@mui/material/styles'
 
 import { grey } from '@/theme/color'
@@ -68,7 +68,7 @@ export const defaultTheme = createTheme({
   },
   palette: {
     primary: {
-      main: blue[300],
+      main: '#8EB7EE',
     },
     secondary: {
       main: pink[300],
@@ -118,7 +118,7 @@ export const defaultTheme = createTheme({
       color: grey[300],
     },
     button: {
-      fontSize: 13,
+      fontSize: 15,
       color: '#ffffff',
     },
     h1: {

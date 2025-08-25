@@ -1,3 +1,4 @@
 export * from './Button'
+export * from './FixedAspectImage'
 export * from './Image'
 export * from './PrimaryButton'
