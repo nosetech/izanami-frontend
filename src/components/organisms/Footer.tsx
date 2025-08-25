@@ -5,30 +5,26 @@ import { ReactNode } from 'react'
 
 type FooterStyleProps = {
   color?: string
-  backgroundColor?: string
   theme?: Theme
   children: ReactNode
 }
 
 type FooterProps = {
   color?: string
-  backgroundColor?: string
 }
 
-const FooterStyle = styled('div')(
-  ({ color, backgroundColor, theme }: FooterStyleProps) => ({
-    color: color ?? theme?.palette.base.middle,
-    backgroundColor: backgroundColor ?? theme?.palette.background.default,
-    width: '100%',
-    marginTop: 'auto',
-  }),
-)
+const FooterStyle = styled('div')(({ color, theme }: FooterStyleProps) => ({
+  color: color ?? theme?.palette.base.middle,
+  backgroundColor: theme?.palette.background.default,
+  width: '100%',
+  marginTop: 'auto',
+}))
 
 export const Footer = (props: FooterProps) => {
-  const { color, backgroundColor } = props
+  const { color } = props
 
   return (
-    <FooterStyle color={color} backgroundColor={backgroundColor}>
+    <FooterStyle color={color}>
       <Typography variant='body1' align='center'>
         ©️ 2025 NOSETECH
       </Typography>

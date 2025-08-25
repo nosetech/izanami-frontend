@@ -1,13 +1,5 @@
 'use client'
-import {
-  blue,
-  cyan,
-  green,
-  lightBlue,
-  pink,
-  red,
-  yellow,
-} from '@mui/material/colors'
+import { blue, cyan, green, pink, red, yellow } from '@mui/material/colors'
 import { createTheme } from '@mui/material/styles'
 
 import { grey } from '@/theme/color'
@@ -43,31 +35,8 @@ declare module '@mui/material/styles' {
       pale: string
       bright: string
     }
-    dashboard: {
-      background: string
-      appbar: string
-      appbarText: string
-    }
-    account: {
-      background: string
-      appbar: string
-      appbarText: string
-    }
-    drop: {
-      background: string
-      dropBackground: string
-      appbar: string
-      appbarText: string
-    }
-    result: {
-      background: string
-      appbar: string
-      appbarText: string
-      todayBackground: string
-      resultGreen: string
-      resultBackgroundGreen: string
-      resultRed: string
-      resultBackgroundRed: string
+    foreground: {
+      default: string
     }
   }
   interface PaletteOptions {
@@ -81,31 +50,8 @@ declare module '@mui/material/styles' {
       pale?: string
       bright?: string
     }
-    dashboard?: {
-      background?: string
-      appbar?: string
-      appbarText?: string
-    }
-    account?: {
-      background?: string
-      appbar?: string
-      appbarText?: string
-    }
-    drop?: {
-      background?: string
-      dropBackground?: string
-      appbar?: string
-      appbarText?: string
-    }
-    result?: {
-      background?: string
-      appbar?: string
-      appbarText?: string
-      todayBackground?: string
-      resultGreen?: string
-      resultBackgroundGreen?: string
-      resultRed?: string
-      resultBackgroundRed?: string
+    foreground?: {
+      default?: string
     }
   }
 }
@@ -154,34 +100,11 @@ export const defaultTheme = createTheme({
       pale: '#C0C0C0',
       bright: '#f5f5f5',
     },
-    dashboard: {
-      background: grey[100],
-      appbar: blue[300],
-      appbarText: '#ffffff',
-    },
-    account: {
-      background: green[50],
-      appbar: green[300],
-      appbarText: '#ffffff',
-    },
-    drop: {
-      background: grey[100],
-      dropBackground: '#BBD7ED',
-      appbar: '#B3FC99',
-      appbarText: grey[900],
-    },
-    result: {
-      background: grey[100],
-      appbar: '#E4DA7D',
-      appbarText: grey[900],
-      todayBackground: lightBlue[100],
-      resultGreen: '#B3FC99',
-      resultBackgroundGreen: 'rgba(179,252,153,0.3)',
-      resultRed: '#E47D83',
-      resultBackgroundRed: 'rgba(228,125,131,0.3)',
+    foreground: {
+      default: '#EEF4B0',
     },
     background: {
-      default: grey[0],
+      default: '#E3DDC2',
       paper: '#ffffff',
     },
   },
