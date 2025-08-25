@@ -1,2 +1,2 @@
 export * from './BaseLayout'
-export * from './Login'
+export * from './LoginTemplate'

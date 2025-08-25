@@ -66,11 +66,42 @@ export function LoginTemplate() {
           />
         )}
         <Stack
+          position='relative'
           p={2}
           width='600px'
           spacing={1}
           alignItems='center'
-          sx={{ background: theme.palette.foreground.default }}
+          sx={{
+            backgroundColor: 'transparent',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: 'url(/site-image.png)',
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.7,
+              zIndex: 1,
+            },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: `${theme.palette.foreground.default}CC`,
+              zIndex: 2,
+            },
+            '& > *': {
+              position: 'relative',
+              zIndex: 3,
+            },
+          }}
         >
           <Image src='Icon.svg' alt='logo image' width={86} height={86} />
           <Typography variant='h3' fontSize={24}>
