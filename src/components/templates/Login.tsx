@@ -1,7 +1,7 @@
 'use client'
 import { FixedAspectImage, Image, PrimaryButton } from '@/components/atoms'
 import { useLogin } from '@/hooks/api/useLogin'
-import { useIsMobileSize } from '@/hooks/useIsMobileSize'
+import { useIsTabletSize } from '@/hooks/useIsTabletSize'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Stack, TextField, Typography, useTheme } from '@mui/material'
 import { useRouter } from 'next/navigation'
@@ -22,7 +22,7 @@ export function LoginTemplate() {
   const router = useRouter()
   const { login, loading } = useLogin()
   const theme = useTheme()
-  const isMobileSize = useIsMobileSize()
+  const isTabletSize = useIsTabletSize()
 
   const {
     register,
@@ -55,7 +55,7 @@ export function LoginTemplate() {
   return (
     <Stack justifyContent='center' alignItems='center' height='100%'>
       <Stack justifyContent='center' direction='row' width='90%'>
-        {!isMobileSize && (
+        {!isTabletSize && (
           <FixedAspectImage
             src='/site-image.png'
             alt='site image'
