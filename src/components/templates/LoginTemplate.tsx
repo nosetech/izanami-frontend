@@ -22,11 +22,17 @@ export function LoginTemplate() {
     }
   }
 
-  // TODO: ウィンドウ縦サイズを小さくした時に、コンポーネントが重なるのではなく画面スクロールして全体が見えるようにする。
-  // TODO: ウィンドウ横サイズを小さくした時に、画像サイズを維持できなくなったら横スクロールバーを出すようにする。
-  // モバイルサイズの場合はログインコンポーネントの裏に画像を表示して透けて見えるようにする。
   return (
-    <Stack justifyContent='center' alignItems='center' height='100%'>
+    <Stack
+      alignItems='center'
+      justifyContent='center'
+      height='100%'
+      minHeight='500px'
+      sx={{
+        pt: 5,
+        pb: 5,
+      }}
+    >
       {isTabletSize ? (
         <MinimalLogin onSubmit={onSubmit} loading={loading} />
       ) : (
