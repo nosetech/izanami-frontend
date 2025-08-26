@@ -17,6 +17,7 @@ const schema = yup.object({
 export type AuthInputFieldProps = Omit<StackProps, 'onSubmit'> & {
   onSubmit: SubmitHandler<AuthFormInput>
   loading: boolean
+  size?: 'small' | 'medium'
   inputFieldBackgroundColor?: string
   disableHelperText?: boolean
 }
@@ -25,6 +26,7 @@ export const AuthInputField = (props: AuthInputFieldProps) => {
   const {
     onSubmit,
     loading,
+    size,
     inputFieldBackgroundColor,
     disableHelperText,
     ...stackProps
@@ -48,6 +50,7 @@ export const AuthInputField = (props: AuthInputFieldProps) => {
     <Stack component='form' {...stackProps}>
       <TextField
         label='email'
+        size={size}
         required
         autoComplete='email'
         error={'email' in errors}
@@ -66,6 +69,7 @@ export const AuthInputField = (props: AuthInputFieldProps) => {
       <TextField
         type='password'
         label='password'
+        size={size}
         required
         autoComplete='current-password'
         error={'password' in errors}
@@ -81,6 +85,7 @@ export const AuthInputField = (props: AuthInputFieldProps) => {
       />
       <PrimaryButton
         type='submit'
+        size={size}
         loading={loading}
         variant='contained'
         onClick={handleSubmit(onSubmit)}
