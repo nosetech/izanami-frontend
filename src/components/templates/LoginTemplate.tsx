@@ -1,22 +1,11 @@
 'use client'
-import { FixedAspectImage, Image, PrimaryButton } from '@/components/atoms'
+import { FixedAspectImage, Image } from '@/components/atoms'
+import { AuthFormInput, AuthInputField } from '@/components/molecules'
 import { useLogin } from '@/hooks/api/useLogin'
 import { useIsTabletSize } from '@/hooks/useIsTabletSize'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Stack, TextField, Typography, useTheme } from '@mui/material'
+import { Stack, Typography, useTheme } from '@mui/material'
 import { useRouter } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import * as yup from 'yup'
-
-type LoginFormInput = {
-  email: string
-  password: string
-}
-
-const schema = yup.object({
-  email: yup.string().required('入力は必須です。'),
-  password: yup.string().required('入力は必須です。'),
-})
+import { SubmitHandler } from 'react-hook-form'
 
 export function LoginTemplate() {
   const router = useRouter()
@@ -24,28 +13,13 @@ export function LoginTemplate() {
   const theme = useTheme()
   const isTabletSize = useIsTabletSize()
 
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm<LoginFormInput>({
-    resolver: yupResolver(schema),
-  })
-
-  const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
+  const onSubmit: SubmitHandler<AuthFormInput> = async (data) => {
     try {
-      await login(data)
+      await login({ ...data })
       console.log('ログイン成功')
       router.push('/graphql-client')
     } catch (e) {
       console.error('ログイン失敗', e)
-    }
-  }
-
-  const onEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      onSubmit({ email: getValues('email'), password: getValues('password') })
     }
   }
 
@@ -107,41 +81,16 @@ export function LoginTemplate() {
           <Typography variant='h3' fontSize={24}>
             Please Login
           </Typography>
-          <Stack
+          <AuthInputField
+            onSubmit={onSubmit}
+            loading={loading}
+            inputFieldBackgroundColor='#FFFFFF'
+            disableHelperText={true}
             p={3}
             width='100%'
-            component='form'
             aria-labelledby='login_interface'
             spacing={3}
-          >
-            <TextField
-              label='email'
-              required
-              autoComplete='email'
-              error={'email' in errors}
-              onKeyDown={onEnter}
-              {...register('email')}
-              sx={{ background: '#FFFFFF' }}
-            />
-            <TextField
-              type='password'
-              label='password'
-              required
-              autoComplete='current-password'
-              error={'password' in errors}
-              onKeyDown={onEnter}
-              {...register('password')}
-              sx={{ background: '#FFFFFF' }}
-            />
-            <PrimaryButton
-              type='submit'
-              loading={loading}
-              variant='contained'
-              onClick={handleSubmit(onSubmit)}
-            >
-              Login
-            </PrimaryButton>
-          </Stack>
+          />
         </Stack>
       </Stack>
     </Stack>
