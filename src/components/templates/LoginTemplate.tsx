@@ -6,6 +6,7 @@ import { useIsTabletSize } from '@/hooks/useIsTabletSize'
 import { Stack } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 export function LoginTemplate() {
   const router = useRouter()
@@ -15,10 +16,13 @@ export function LoginTemplate() {
   const onSubmit: SubmitHandler<AuthFormInput> = async (data) => {
     try {
       await login({ ...data })
-      console.log('ログイン成功')
+
+      console.log('ログインしました。')
+      toast.success('ログインしました。')
       router.push('/graphql-client')
     } catch (e) {
-      console.error('ログイン失敗', e)
+      console.error('ログインに失敗しました。', e)
+      toast.error('ログインに失敗しました。')
     }
   }
 
