@@ -10,8 +10,8 @@
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "codegen": "graphql-codegen --require dotenv/config --config ./src/graphql/codegen.ts dotenv_config_path=.env.local",
-    "test": "jest",
-    "test:updateSnapshot": "jest --updateSnapshot"
+    "test": "jest --testPathIgnorePatterns=test-utils",
+    "test:updateSnapshot": "jest --updateSnapshot --testPathIgnorePatterns=test-utils"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",

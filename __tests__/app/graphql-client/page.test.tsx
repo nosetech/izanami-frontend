@@ -1,8 +1,8 @@
 import Home from '@/app/graphql-client/page'
 import { useSuspenseQuery } from '@apollo/client'
 import '@testing-library/jest-dom'
-import { render, screen, waitFor } from '@testing-library/react'
-import renderer from 'react-test-renderer'
+import { screen, waitFor } from '@testing-library/react'
+import { renderWithTheme, createWithTheme } from '../../test-utils'
 
 jest.mock('@apollo/client', () => {
   const actual = jest.requireActual('@apollo/client')
@@ -30,7 +30,7 @@ describe('GraphQL Client', () => {
   })
 
   it('renders a content', async () => {
-    render(<Home />)
+    renderWithTheme(<Home />)
 
     await waitFor(() => {
       expect(
@@ -45,7 +45,7 @@ describe('GraphQL Client', () => {
   })
 
   it('renders page unchanged', async () => {
-    const component = renderer.create(<Home />)
+    const component = createWithTheme(<Home />)
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
     await waitFor(() => {

@@ -1,7 +1,7 @@
 import Page from '@/app/page'
 import '@testing-library/jest-dom'
-import { render, screen, waitFor } from '@testing-library/react'
-import renderer from 'react-test-renderer'
+import { screen, waitFor } from '@testing-library/react'
+import { renderWithTheme, createWithTheme } from '../test-utils'
 
 const mockedUseRouter = jest.fn()
 
@@ -13,13 +13,13 @@ jest.mock('next/navigation', () => ({
 // TODO: テストコードはまだサンプルの実装の状態。画面実装完了後にテストコードも整備する。
 describe('Page', () => {
   it('renders a heading', () => {
-    render(<Page />)
+    renderWithTheme(<Page />)
 
-    expect(screen.getByText('ログインフォーム')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument()
   })
 
   it('renders homepage unchanged', async () => {
-    const component = renderer.create(<Page />)
+    const component = createWithTheme(<Page />)
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
