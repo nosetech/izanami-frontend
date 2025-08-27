@@ -1,7 +1,7 @@
 import Page from '@/app/page'
 import '@testing-library/jest-dom'
 import { screen, waitFor } from '@testing-library/react'
-import { renderWithTheme, createWithTheme } from '../test-utils'
+import { createWithTheme, renderWithTheme } from '../test-utils'
 
 const mockedUseRouter = jest.fn()
 
@@ -10,15 +10,16 @@ jest.mock('next/navigation', () => ({
   usePathname: jest.fn().mockReturnValue('/graphql-client'),
 }))
 
-// TODO: テストコードはまだサンプルの実装の状態。画面実装完了後にテストコードも整備する。
 describe('Page', () => {
-  it('renders a heading', () => {
+  it('renders a login field', () => {
     renderWithTheme(<Page />)
 
     expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /email/i })).toBeInTheDocument()
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
   })
 
-  it('renders homepage unchanged', async () => {
+  it('renders page unchanged', async () => {
     const component = createWithTheme(<Page />)
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
