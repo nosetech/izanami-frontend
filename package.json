@@ -10,8 +10,8 @@
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "codegen": "graphql-codegen --require dotenv/config --config ./src/graphql/codegen.ts dotenv_config_path=.env.local",
-    "test": "jest",
-    "test:updateSnapshot": "jest --updateSnapshot"
+    "test": "jest --testPathIgnorePatterns=test-utils",
+    "test:updateSnapshot": "jest --updateSnapshot --testPathIgnorePatterns=test-utils"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
@@ -21,6 +21,7 @@
     "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^5.1.1",
     "@mui/icons-material": "^7.1.2",
+    "@mui/lab": "^7.0.0-beta.16",
     "@mui/material": "^7.1.2",
     "@mui/material-nextjs": "^7.1.1",
     "axios": "^1.10.0",
@@ -32,6 +33,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
+    "react-toastify": "^11.0.5",
     "yup": "^1.6.1"
   },
   "devDependencies": {
