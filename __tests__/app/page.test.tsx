@@ -10,6 +10,14 @@ jest.mock('next/navigation', () => ({
   usePathname: jest.fn().mockReturnValue('/graphql-client'),
 }))
 
+jest.mock('@/hooks', () => ({
+  useCurrentUser: jest.fn().mockReturnValue({
+    currentUser: null,
+    isLoading: false,
+    refreshUser: jest.fn(),
+  }),
+}))
+
 describe('Page', () => {
   it('renders a login field', () => {
     renderWithTheme(<Page />)
