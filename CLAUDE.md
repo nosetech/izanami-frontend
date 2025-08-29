@@ -34,6 +34,7 @@ yarn codegen
 ## アーキテクチャ
 
 ### 主要技術
+
 - **Next.js 15** - App RouterとTurbopack使用
 - **React 19** - TypeScript使用
 - **Material-UI (MUI)** v7 - Emotionスタイリング使用
@@ -58,23 +59,27 @@ yarn codegen
 ### 主要機能
 
 #### GraphQL統合
+
 - Next.js SSRサポートを持つApollo Client
 - GraphQLスキーマからTypeScriptへのコード生成
 - `src/graphql/generated/components.ts`に生成された型
 - `src/graphql/query/`の`.graphql`ファイルでのGraphQL操作
 
 #### 認証
+
 - `useLogin`フックによるCookieベースのセッション管理
 - ログイン用の`/session`エンドポイント
 - セキュアな設定でCookieにユーザーデータを保存
 
 #### テーマ設定
+
 - 日本語ロケールサポートを持つカスタムMUIテーマ
 - カスタムブレークポイント: mobile、tablet、laptop、desktop
 - カスタムカラー（alert、base、foreground）を持つ拡張パレット
 - Robotoフォントファミリー
 
 #### コンポーネントアーキテクチャ
+
 - コンポーネント組織のためのAtomic Designパターン
 - オプションのフッターを持つBaseLayoutテンプレート
 - カスタムMaterial-UIブレークポイントを使用したレスポンシブデザイン
@@ -82,6 +87,7 @@ yarn codegen
 ## 環境設定
 
 プロジェクトには以下を含む`.env.local`ファイルが必要です：
+
 - `NEXT_PUBLIC_GRAPHQL_URI` - GraphQL APIエンドポイント
 
 ## テスト
@@ -94,6 +100,36 @@ yarn codegen
 ## コード生成
 
 以下の場合に`yarn codegen`を実行してください：
+
 - `src/graphql/query/`に新しいGraphQL操作を追加した場合
 - GraphQLスキーマに変更があった場合
 - 環境変数にGraphQLエンドポイントを設定した場合
+
+## Journaling workflow
+
+InkdropのMCPサーバーを使用できる状態の場合、あなた (AI エージェント) は、このプロジェクトで行った作業を、タスクの終了ごとに私の Inkdrop ノートに報告してください。
+
+「izanami」ノートブックに「Log: <Job title>」というタイトルで作成します。
+
+タスクの終了ごとに、次の形式でノートを書いてください。:
+
+## Log: <task title>
+
+- **Prompt**: <受け取った指示>
+- **Issue**: <課題の内容>
+
+### What I did: <やったことの要約>
+
+...
+
+### How I did it: <どうやって解決したか>
+
+...
+
+### What were challenging: <難しかったこと>
+
+...
+
+### Future work (optional)
+
+- <今後の改善案など>

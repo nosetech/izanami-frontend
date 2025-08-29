@@ -3,7 +3,8 @@
     "allow": [
       "Bash(gh issue:*)",
       "Bash(gh pr create:*)",
-      "Bash(yarn test:*)"
+      "Bash(yarn test:*)",
+      "mcp__inkdrop__create-note"
     ],
     "deny": [],
     "ask": []
