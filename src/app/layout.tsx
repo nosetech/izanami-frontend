@@ -1,4 +1,3 @@
-import { UserProvider } from '@/contexts'
 import { ApolloClientWrapper } from '@/graphql/ApolloClientWrapper'
 import { defaultTheme } from '@/theme/default'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
@@ -29,9 +28,7 @@ export default function RootLayout({
               pauseOnHover
               theme='light'
             />
-            <ApolloClientWrapper>
-              <UserProvider>{children}</UserProvider>
-            </ApolloClientWrapper>
+            <ApolloClientWrapper>{children}</ApolloClientWrapper>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

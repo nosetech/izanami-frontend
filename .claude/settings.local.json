@@ -4,7 +4,14 @@
       "Bash(gh issue:*)",
       "Bash(gh pr create:*)",
       "Bash(yarn test:*)",
-      "mcp__inkdrop__create-note"
+      "mcp__inkdrop__create-note",
+      "Bash(yarn build)",
+      "Bash(yarn lint)",
+      "Bash(yarn format)",
+      "mcp__inkdrop__list-notebooks",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(yarn add zustand)"
     ],
     "deny": [],
     "ask": []

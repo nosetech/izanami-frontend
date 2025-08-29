@@ -31,7 +31,7 @@ export const Logo = (props: LogoProps) => {
           fontSize={logoFontSize}
           sx={{ color: color, fontWeight: 'bold' }}
         >
-          - {familyName}
+          ({familyName})
         </Typography>
       )}
     </Stack>

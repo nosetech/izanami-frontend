@@ -1,4 +1,4 @@
-import { useCurrentUser } from '@/contexts'
+import { useCurrentUser } from '@/hooks'
 import { useAxios } from '@/hooks/api/axios'
 import { User } from '@/types/api/User'
 import Cookies from 'js-cookie'

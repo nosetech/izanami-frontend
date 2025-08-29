@@ -1,4 +1,4 @@
-import { useCurrentUser } from '@/contexts'
+import { useCurrentUser } from '@/hooks'
 import { useIsMobileSize } from '@/hooks/useIsMobileSize'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import {

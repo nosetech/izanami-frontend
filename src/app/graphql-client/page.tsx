@@ -1,20 +1,16 @@
-'use client'
-import { GetUsersDocument } from '@/graphql/generated/components'
-import { useSuspenseQuery } from '@apollo/client'
-import { Suspense } from 'react'
+import { BaseLayout } from '@/components/templates/BaseLayout'
+import { Typography } from '@mui/material'
+import type { Metadata } from 'next'
 
-export default function Home() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>
-        <p>data received during Page render</p>
-        <Content />
-      </div>
-    </Suspense>
-  )
+export const metadata: Metadata = {
+  title: 'MyPage',
+  description: 'Chore-XP My Page',
 }
 
-const Content = () => {
-  const { data } = useSuspenseQuery(GetUsersDocument)
-  return <p>{JSON.stringify(data)}</p>
+export default function Page() {
+  return (
+    <BaseLayout footerEnable={true}>
+      <Typography variant='body1'> test</Typography>
+    </BaseLayout>
+  )
 }
