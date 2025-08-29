@@ -105,6 +105,10 @@ yarn codegen
 - GraphQLスキーマに変更があった場合
 - 環境変数にGraphQLエンドポイントを設定した場合
 
+## 開発ルール
+
+- commitする前にはyarn lint, yarn formatを実行してください。
+
 ## Journaling workflow
 
 InkdropのMCPサーバーを使用できる状態の場合、あなた (AI エージェント) は、このプロジェクトで行った作業を、タスクの終了ごとに私の Inkdrop ノートに報告してください。
