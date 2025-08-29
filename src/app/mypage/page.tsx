@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <BaseLayout footerEnable={true}>
-      <Typography variant='body1'> test</Typography>
+      <Typography variant='h1'>My Page</Typography>
     </BaseLayout>
   )
 }
