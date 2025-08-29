@@ -13,5 +13,5 @@ export default function auth(request: NextRequest) {
 
 // TODO: 対象となるパスを整備する
 export const config = {
-  matcher: ['/graphql-client/:path*'],
+  matcher: ['/mypage/:path*'],
 }

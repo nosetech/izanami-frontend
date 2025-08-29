@@ -1,3 +1,4 @@
+import { useCurrentUser } from '@/hooks'
 import { useAxios } from '@/hooks/api/axios'
 import { User } from '@/types/api/User'
 import Cookies from 'js-cookie'
@@ -8,6 +9,7 @@ type LoginRequest = {
 }
 
 export const useLogin = () => {
+  const { refreshUser } = useCurrentUser()
   const [{ loading }, executePost] = useAxios(
     {
       url: '/session',
@@ -17,18 +19,20 @@ export const useLogin = () => {
   )
 
   const login = async (props: LoginRequest) => {
-    await executePost({ data: { ...props } }).then((res) => {
+    await executePost({ data: { ...props } }).then(async (res) => {
       const newUserData: User = { ...res.data }
       Cookies.set('user', JSON.stringify(newUserData), {
         path: '/',
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
       })
+      await refreshUser()
     })
   }
 
-  const logout = () => {
+  const logout = async () => {
     Cookies.remove('user', { path: '/' })
+    await refreshUser()
   }
 
   return {

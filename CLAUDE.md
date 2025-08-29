@@ -1,99 +1,139 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このファイルは、このリポジトリのコードを扱う際のClaude Code（claude.ai/code）への指針を提供します。
 
-## Project Overview
+## プロジェクト概要
 
-This is a Next.js 15 React frontend application for Izanami, built with TypeScript and Material-UI. The project uses Apollo Client for GraphQL API communication, with code generation for type-safe GraphQL operations.
+IzanamiのNext.js 15 Reactフロントエンドアプリケーションで、TypeScriptとMaterial-UIを使用して構築されています。GraphQL API通信にはApollo Clientを使用し、型安全なGraphQL操作のためのコード生成機能を備えています。
 
-## Development Commands
+## 開発コマンド
 
 ```bash
-# Development server (with Turbopack)
+# 開発サーバー（Turbopack使用）
 yarn dev
 
-# Build for production
+# 本番用ビルド
 yarn build
 
-# Start production server
+# 本番サーバー起動
 yarn start
 
-# Linting and formatting
+# リント・フォーマット
 yarn lint
 yarn format
 yarn format:check
 
-# Testing
+# テスト実行
 yarn test
 yarn test:updateSnapshot
 
-# GraphQL code generation
+# GraphQLコード生成
 yarn codegen
 ```
 
-## Architecture
+## アーキテクチャ
 
-### Core Technologies
-- **Next.js 15** with App Router and Turbopack
-- **React 19** with TypeScript
-- **Material-UI (MUI)** v7 with Emotion styling
-- **Apollo Client** for GraphQL with Next.js integration
-- **GraphQL Code Generator** for type-safe operations
-- **Axios** with axios-hooks for REST API calls
-- **React Hook Form** with Yup validation
+### 主要技術
 
-### Project Structure
+- **Next.js 15** - App RouterとTurbopack使用
+- **React 19** - TypeScript使用
+- **Material-UI (MUI)** v7 - Emotionスタイリング使用
+- **Apollo Client** - GraphQLのNext.js統合
+- **GraphQL Code Generator** - 型安全な操作生成
+- **Axios** - axios-hooksを使用したREST API呼び出し
+- **React Hook Form** - Yupバリデーション使用
 
-- `src/app/` - Next.js App Router pages and layouts
-- `src/components/` - Component hierarchy following atomic design:
-  - `atoms/` - Basic UI components (Button, Image, etc.)
-  - `molecules/` - Simple component combinations
-  - `organisms/` - Complex components (AppBar, Footer, Logo)
-  - `templates/` - Page layout templates (BaseLayout, Login)
-- `src/graphql/` - GraphQL client configuration and generated types
-- `src/hooks/` - Custom React hooks including API hooks
-- `src/theme/` - MUI theme configuration with custom breakpoints
-- `src/types/` - TypeScript type definitions
+### プロジェクト構造
 
-### Key Features
+- `src/app/` - Next.js App Routerのページとレイアウト
+- `src/components/` - Atomic Designに従ったコンポーネント階層:
+  - `atoms/` - 基本的なUIコンポーネント（Button、Imageなど）
+  - `molecules/` - シンプルなコンポーネントの組み合わせ
+  - `organisms/` - 複雑なコンポーネント（AppBar、Footer、Logo）
+  - `templates/` - ページレイアウトテンプレート（BaseLayout、Login）
+- `src/graphql/` - GraphQLクライアント設定と生成された型
+- `src/hooks/` - APIフックを含むカスタムReactフック
+- `src/theme/` - カスタムブレークポイントを持つMUIテーマ設定
+- `src/types/` - TypeScript型定義
 
-#### GraphQL Integration
-- Apollo Client with Next.js SSR support
-- Code generation from GraphQL schema to TypeScript
-- Generated types in `src/graphql/generated/components.ts`
-- GraphQL operations in `src/graphql/query/` as `.graphql` files
+### 主要機能
 
-#### Authentication
-- Cookie-based session management via `useLogin` hook
-- Session endpoint at `/session` for login
-- User data stored in cookies with secure settings
+#### GraphQL統合
 
-#### Theming
-- Custom MUI theme with Japanese locale support
-- Custom breakpoints: mobile, tablet, laptop, desktop
-- Extended palette with custom colors (alert, base, foreground)
-- Roboto font family
+- Next.js SSRサポートを持つApollo Client
+- GraphQLスキーマからTypeScriptへのコード生成
+- `src/graphql/generated/components.ts`に生成された型
+- `src/graphql/query/`の`.graphql`ファイルでのGraphQL操作
 
-#### Component Architecture
-- Atomic design pattern for component organization
-- BaseLayout template with optional footer
-- Responsive design with custom Material-UI breakpoints
+#### 認証
 
-## Environment Configuration
+- `useLogin`フックによるCookieベースのセッション管理
+- ログイン用の`/session`エンドポイント
+- セキュアな設定でCookieにユーザーデータを保存
 
-The project requires a `.env.local` file with:
-- `NEXT_PUBLIC_GRAPHQL_URI` - GraphQL API endpoint
+#### テーマ設定
 
-## Testing
+- 日本語ロケールサポートを持つカスタムMUIテーマ
+- カスタムブレークポイント: mobile、tablet、laptop、desktop
+- カスタムカラー（alert、base、foreground）を持つ拡張パレット
+- Robotoフォントファミリー
 
-- Jest with Next.js integration
-- Testing Library for React component testing
-- Snapshot testing enabled
-- Tests in `__tests__/` directory
+#### コンポーネントアーキテクチャ
 
-## Code Generation
+- コンポーネント組織のためのAtomic Designパターン
+- オプションのフッターを持つBaseLayoutテンプレート
+- カスタムMaterial-UIブレークポイントを使用したレスポンシブデザイン
 
-Run `yarn codegen` after:
-- Adding new GraphQL operations in `src/graphql/query/`
-- Changes to the GraphQL schema
-- Setting up the GraphQL endpoint in environment variables
+## 環境設定
+
+プロジェクトには以下を含む`.env.local`ファイルが必要です：
+
+- `NEXT_PUBLIC_GRAPHQL_URI` - GraphQL APIエンドポイント
+
+## テスト
+
+- Next.js統合を持つJest
+- Reactコンポーネントテスト用のTesting Library
+- スナップショットテストが有効
+- `__tests__/`ディレクトリ内のテスト
+
+## コード生成
+
+以下の場合に`yarn codegen`を実行してください：
+
+- `src/graphql/query/`に新しいGraphQL操作を追加した場合
+- GraphQLスキーマに変更があった場合
+- 環境変数にGraphQLエンドポイントを設定した場合
+
+## 開発ルール
+
+- commitする前にはyarn lint, yarn formatを実行してください。
+
+## Journaling workflow
+
+InkdropのMCPサーバーを使用できる状態の場合、あなた (AI エージェント) は、このプロジェクトで行った作業を、タスクの終了ごとに私の Inkdrop ノートに報告してください。
+
+「izanami」ノートブックに「Log: <Job title>」というタイトルで作成します。
+
+タスクの終了ごとに、次の形式でノートを書いてください。:
+
+## Log: <task title>
+
+- **Prompt**: <受け取った指示>
+- **Issue**: <課題の内容>
+
+### What I did: <やったことの要約>
+
+...
+
+### How I did it: <どうやって解決したか>
+
+...
+
+### What were challenging: <難しかったこと>
+
+...
+
+### Future work (optional)
+
+- <今後の改善案など>

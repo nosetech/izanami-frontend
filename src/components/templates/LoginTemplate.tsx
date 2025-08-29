@@ -19,7 +19,7 @@ export function LoginTemplate() {
 
       console.log('ログインしました。')
       toast.success('ログインしました。')
-      router.push('/graphql-client')
+      router.push('/mypage')
     } catch (e) {
       console.error('ログインに失敗しました。', e)
       toast.error('ログインに失敗しました。')

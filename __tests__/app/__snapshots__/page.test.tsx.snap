@@ -16,7 +16,7 @@ exports[`Page renders page unchanged 1`] = `
       className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-1x0of2z-MuiToolbar-root"
     >
       <div
-        className="MuiStack-root css-16ml5pn-MuiStack-root"
+        className="MuiStack-root css-4y003k-MuiStack-root"
       >
         <div
           className="MuiStack-root css-kdc3n8-MuiStack-root"
@@ -42,12 +42,12 @@ exports[`Page renders page unchanged 1`] = `
               width={30}
             />
           </div>
-          <p
-            className="MuiTypography-root MuiTypography-body1 css-zb3l44-MuiTypography-root"
+          <h1
+            className="MuiTypography-root MuiTypography-h1 css-1qz4kyp-MuiTypography-root"
             style={{}}
           >
-            Chore - XP
-          </p>
+            Chore - XP :
+          </h1>
         </div>
       </div>
     </div>

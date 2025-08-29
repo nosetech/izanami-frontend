@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
+    "dev": "NODE_ENV=development; next dev --turbopack",
+    "build": "NODE_ENV=production; next build",
+    "start": "NODE_ENV=production; next start",
     "lint": "next lint",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
@@ -34,7 +34,8 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
     "react-toastify": "^11.0.5",
-    "yup": "^1.6.1"
+    "yup": "^1.6.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
