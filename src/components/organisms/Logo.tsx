@@ -4,10 +4,11 @@ import { Stack, Typography } from '@mui/material'
 
 export type LogoProps = {
   color?: string
+  familyName?: string
 }
 
 export const Logo = (props: LogoProps) => {
-  const { color } = props
+  const { color, familyName } = props
   const isMobileSize = useIsMobileSize()
 
   const logoSize = { mobile: 20, tablet: 30 }
@@ -25,6 +26,14 @@ export const Logo = (props: LogoProps) => {
       <Typography fontSize={logoFontSize} sx={{ color: color }}>
         Chore - XP
       </Typography>
+      {familyName && (
+        <Typography
+          fontSize={logoFontSize}
+          sx={{ color: color, fontWeight: 'bold' }}
+        >
+          - {familyName}
+        </Typography>
+      )}
     </Stack>
   )
 }

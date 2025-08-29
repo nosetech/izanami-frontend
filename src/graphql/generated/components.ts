@@ -77,6 +77,22 @@ export type User = {
   updatedAt: Scalars['ISO8601DateTime']['output']
 }
 
+export type GetCurrentUserQueryVariables = Exact<{
+  id: Scalars['ID']['input']
+}>
+
+export type GetCurrentUserQuery = {
+  __typename?: 'Query'
+  user?: {
+    __typename?: 'User'
+    id: string
+    name: string
+    email: string
+    role: string
+    family?: { __typename?: 'Family'; id: string; name: string } | null
+  } | null
+}
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetUsersQuery = {
@@ -84,6 +100,20 @@ export type GetUsersQuery = {
   users: Array<{ __typename?: 'User'; id: string; name: string; email: string }>
 }
 
+export const GetCurrentUserDocument = gql`
+  query getCurrentUser($id: ID!) {
+    user(id: $id) {
+      id
+      name
+      email
+      role
+      family {
+        id
+        name
+      }
+    }
+  }
+`
 export const GetUsersDocument = gql`
   query getUsers {
     users {
@@ -113,6 +143,24 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper,
 ) {
   return {
+    getCurrentUser(
+      variables: GetCurrentUserQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<GetCurrentUserQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetCurrentUserQuery>({
+            document: GetCurrentUserDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
+        'getCurrentUser',
+        'query',
+        variables,
+      )
+    },
     getUsers(
       variables?: GetUsersQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders,
