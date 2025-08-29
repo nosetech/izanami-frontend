@@ -20,10 +20,10 @@ export const AppBar = () => {
 
   const appBarHeight = { mobile: '25px', tablet: '32px' }
   const fontVariant: { mobile: TypographyVariant; tablet: TypographyVariant } =
-  {
-    mobile: 'h4',
-    tablet: 'h1',
-  }
+    {
+      mobile: 'h4',
+      tablet: 'h1',
+    }
 
   return (
     <MuiAppBar
