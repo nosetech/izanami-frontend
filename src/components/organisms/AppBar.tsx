@@ -7,23 +7,23 @@ import {
   Stack,
   Toolbar,
   Typography,
+  TypographyVariant,
   useTheme,
 } from '@mui/material'
 
 import { Logo } from '@/components/organisms'
 
-export type AppBarProps = {
-  color?: string
-}
-
-export const AppBar = (props: AppBarProps) => {
-  const { color } = props
+export const AppBar = () => {
   const theme = useTheme()
   const isMobileSize = useIsMobileSize()
   const { currentUser, isLoading } = useCurrentUser()
 
   const appBarHeight = { mobile: '25px', tablet: '32px' }
-  const fontSize = { mobile: 12, tablet: 16 }
+  const fontVariant: { mobile: TypographyVariant; tablet: TypographyVariant } =
+  {
+    mobile: 'h4',
+    tablet: 'h1',
+  }
 
   return (
     <MuiAppBar
@@ -43,13 +43,12 @@ export const AppBar = (props: AppBarProps) => {
           alignItems='center'
           justifyContent='space-between'
         >
-          <Logo color={color} familyName={currentUser?.family?.name} />
+          <Logo familyName={currentUser?.family?.name} />
 
           {!isLoading && currentUser && (
             <Stack direction='row' alignItems='center' spacing={1}>
               <Typography
-                fontSize={isMobileSize ? fontSize.mobile : fontSize.tablet}
-                sx={{ color: color }}
+                variant={isMobileSize ? fontVariant.mobile : fontVariant.tablet}
               >
                 {currentUser.name}
               </Typography>
@@ -58,7 +57,6 @@ export const AppBar = (props: AppBarProps) => {
                 edge='end'
                 color='inherit'
                 aria-label='menu'
-                sx={{ color: color }}
               >
                 <MenuIcon />
               </IconButton>
