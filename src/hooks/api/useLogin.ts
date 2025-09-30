@@ -2,6 +2,7 @@ import { useCurrentUser } from '@/hooks'
 import { useAxios } from '@/hooks/api/axios'
 import { User } from '@/types/api/User'
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/navigation'
 
 type LoginRequest = {
   email: string
@@ -10,6 +11,7 @@ type LoginRequest = {
 
 export const useLogin = () => {
   const { refreshUser } = useCurrentUser()
+  const router = useRouter()
   const [{ loading }, executePost] = useAxios(
     {
       url: '/session',
@@ -33,6 +35,7 @@ export const useLogin = () => {
   const logout = async () => {
     Cookies.remove('user', { path: '/' })
     await refreshUser()
+    router.push('/')
   }
 
   return {
