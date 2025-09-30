@@ -3,6 +3,7 @@ import { useLogin } from '@/hooks/api/useLogin'
 import { useIsMobileSize } from '@/hooks/useIsMobileSize'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import {
+  Divider,
   IconButton,
   Menu,
   MenuItem,
@@ -16,9 +17,11 @@ import {
 import { useState } from 'react'
 
 import { Logo } from '@/components/organisms'
+import { useRouter } from 'next/navigation'
 
 export const AppBar = () => {
   const theme = useTheme()
+  const router = useRouter()
   const isMobileSize = useIsMobileSize()
   const { currentUser, isLoading } = useCurrentUser()
   const { logout } = useLogin()
@@ -41,6 +44,16 @@ export const AppBar = () => {
 
   const handleLogout = async () => {
     await logout()
+    handleMenuClose()
+  }
+
+  const handleMyPage = async () => {
+    router.push('/mypage')
+    handleMenuClose()
+  }
+
+  const handleHouseWorks = async () => {
+    router.push('/houseworks')
     handleMenuClose()
   }
 
@@ -93,6 +106,19 @@ export const AppBar = () => {
                   horizontal: 'right',
                 }}
               >
+                <MenuItem
+                  onClick={handleMyPage}
+                  sx={{ minHeight: 'auto', py: 0.5 }}
+                >
+                  <Typography variant='body1'>MyPage</Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={handleHouseWorks}
+                  sx={{ minHeight: 'auto', py: 0.5 }}
+                >
+                  <Typography variant='body1'>HouseWorks</Typography>
+                </MenuItem>
+                <Divider />
                 <MenuItem
                   onClick={handleLogout}
                   sx={{ minHeight: 'auto', py: 0.5 }}
