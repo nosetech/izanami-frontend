@@ -47,15 +47,17 @@ export const AppBar = () => {
     handleMenuClose()
   }
 
-  const handleMyPage = async () => {
-    router.push('/mypage')
+  const handleNavigation = (path: string) => () => {
+    router.push(path)
     handleMenuClose()
   }
 
-  const handleHouseWorks = async () => {
-    router.push('/houseworks')
-    handleMenuClose()
-  }
+  const menuItems = [
+    { label: 'MyPage', onClick: handleNavigation('/mypage') },
+    { label: 'HouseWorks', onClick: handleNavigation('/houseworks') },
+  ]
+
+  const menuItemStyles = { minHeight: 'auto', py: 0.5 }
 
   return (
     <MuiAppBar
@@ -106,23 +108,17 @@ export const AppBar = () => {
                   horizontal: 'right',
                 }}
               >
-                <MenuItem
-                  onClick={handleMyPage}
-                  sx={{ minHeight: 'auto', py: 0.5 }}
-                >
-                  <Typography variant='body1'>MyPage</Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={handleHouseWorks}
-                  sx={{ minHeight: 'auto', py: 0.5 }}
-                >
-                  <Typography variant='body1'>HouseWorks</Typography>
-                </MenuItem>
+                {menuItems.map((item) => (
+                  <MenuItem
+                    key={item.label}
+                    onClick={item.onClick}
+                    sx={menuItemStyles}
+                  >
+                    <Typography variant='body1'>{item.label}</Typography>
+                  </MenuItem>
+                ))}
                 <Divider />
-                <MenuItem
-                  onClick={handleLogout}
-                  sx={{ minHeight: 'auto', py: 0.5 }}
-                >
+                <MenuItem onClick={handleLogout} sx={menuItemStyles}>
                   <Typography variant='body1'>Logout</Typography>
                 </MenuItem>
               </Menu>
