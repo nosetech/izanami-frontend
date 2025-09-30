@@ -11,7 +11,9 @@
       "mcp__inkdrop__list-notebooks",
       "Bash(git add:*)",
       "Bash(git push:*)",
-      "Bash(yarn add zustand)"
+      "Bash(yarn add zustand)",
+      "Bash(find:*)",
+      "Bash(yarn format:check)"
     ],
     "deny": [],
     "ask": []
