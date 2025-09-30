@@ -93,7 +93,12 @@ export const AppBar = () => {
                   horizontal: 'right',
                 }}
               >
-                <MenuItem onClick={handleLogout}>ログアウト</MenuItem>
+                <MenuItem
+                  onClick={handleLogout}
+                  sx={{ minHeight: 'auto', py: 0.5 }}
+                >
+                  <Typography variant='body1'>Logout</Typography>
+                </MenuItem>
               </Menu>
             </Stack>
           )}

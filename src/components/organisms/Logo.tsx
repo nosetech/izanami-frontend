@@ -27,7 +27,7 @@ export const Logo = (props: LogoProps) => {
       />
       {!isMobileSize && (
         <Typography variant={isMobileSize ? logoFont.mobile : logoFont.tablet}>
-          Chore - XP :
+          Chore - XP
         </Typography>
       )}
       {familyName && (
