@@ -46,7 +46,7 @@ exports[`Page renders page unchanged 1`] = `
             className="MuiTypography-root MuiTypography-h1 css-1qz4kyp-MuiTypography-root"
             style={{}}
           >
-            Chore - XP :
+            Chore - XP
           </h1>
         </div>
       </div>
