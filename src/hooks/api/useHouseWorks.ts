@@ -7,16 +7,11 @@ export const useHouseWorks = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [listHouseWorks] = useLazyQuery(ListHouseWorksDocument)
 
-  const getHouseWorksList = async (familyId: string, token: string) => {
+  const getHouseWorksList = async (familyId: string) => {
     setIsLoading(true)
     try {
       const { data } = await listHouseWorks({
         variables: { familyId: familyId },
-        context: {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        },
       })
       console.log('query result data: ', data)
     } catch (error) {

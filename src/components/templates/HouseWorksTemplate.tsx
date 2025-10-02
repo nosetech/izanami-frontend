@@ -20,7 +20,7 @@ export function HouseWorksTemplate() {
 
   const handleCreateHouseWork = () => {
     if (isCurrentUserLoading == false && currentUser) {
-      getHouseWorksList(currentUser.family_id, currentUser.token)
+      getHouseWorksList(currentUser.family_id)
     }
   }
 
