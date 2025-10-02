@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material'
 export type TextButtonProps = LoadingButtonProps
 
 export const TextButton = (props: TextButtonProps) => {
-  const { loading } = props
+  const { loading, sx, ...remainProps } = props
 
   const theme = useTheme()
 
@@ -18,8 +18,9 @@ export const TextButton = (props: TextButtonProps) => {
           fontWeight: 'bold',
           textDecoration: 'underline',
         },
+        ...sx,
       }}
-      {...props}
+      {...remainProps}
     >
       {props.children}
     </LoadingButton>
