@@ -1,0 +1,27 @@
+query listHouseWorks($familyId: ID!) {
+  houseworks(familyId: $familyId) {
+    edges {
+      cursor
+      node {
+        id
+        title
+        description
+        schedule
+        suggestedBy {
+          id
+          name
+        }
+        point
+        committed
+        createdAt
+        updatedAt
+      }
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
