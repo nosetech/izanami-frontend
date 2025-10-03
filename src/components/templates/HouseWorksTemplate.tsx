@@ -1,6 +1,6 @@
 'use client'
 import { PrimaryButton } from '@/components/atoms/PrimaryButton'
-import { HouseWorkSearch } from '@/components/organisms/HouseWorkSearch'
+import { HouseWorkCard, HouseWorkSearch } from '@/components/organisms'
 import { useCurrentUser } from '@/hooks'
 import { useHouseWorks } from '@/hooks/api/useHouseWorks'
 import {
@@ -11,18 +11,23 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export function HouseWorksTemplate() {
   const { currentUser, isLoading: isCurrentUserLoading } = useCurrentUser()
-  const { isLoading: isHouseWorksLoading, getHouseWorksList } = useHouseWorks()
+  const {
+    isLoading: isHouseWorksLoading,
+    getHouseWorksList,
+    houseWorksList,
+  } = useHouseWorks()
   const [sortType, setSortType] = useState('10')
 
-  const handleCreateHouseWork = () => {
+  useEffect(() => {
     if (isCurrentUserLoading == false && currentUser) {
       getHouseWorksList(currentUser.family_id)
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCurrentUserLoading, currentUser])
 
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortType(event.target.value as string)
@@ -34,9 +39,7 @@ export function HouseWorksTemplate() {
         House Work
       </Typography>
       {/* TODO: ボタン押下で家事入力モーダル画面を表示する */}
-      <PrimaryButton size='medium' onClick={handleCreateHouseWork}>
-        新しい家事を作成
-      </PrimaryButton>
+      <PrimaryButton size='medium'>新しい家事を作成</PrimaryButton>
       <HouseWorkSearch />
       {/* TODO: ソート機能の実装 */}
       <Stack direction='row' spacing={1} alignItems='center'>
@@ -60,8 +63,29 @@ export function HouseWorksTemplate() {
         </FormControl>
       </Stack>
       {/* TODO: 検索結果表示の実装 */}
-      <Typography variant='body1'>検索結果XX件</Typography>
+      <Typography variant='body1'>
+        検索結果{(houseWorksList?.edges ?? []).length}件
+      </Typography>
       {/* TODO: 家事一覧の実装 */}
+      {isHouseWorksLoading == false && houseWorksList && (
+        <Stack
+          direction='row'
+          justifyContent='center'
+          spacing={2}
+          useFlexGap
+          sx={{ flexWrap: 'wrap' }}
+        >
+          {(houseWorksList.edges ?? []).map(
+            (houseWorkEdge) =>
+              houseWorkEdge?.node && (
+                <HouseWorkCard
+                  key={houseWorkEdge.node.id}
+                  housework={houseWorkEdge.node}
+                />
+              ),
+          )}
+        </Stack>
+      )}
     </Stack>
   )
 }

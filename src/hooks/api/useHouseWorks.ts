@@ -1,10 +1,14 @@
 'use client'
-import { ListHouseWorksDocument } from '@/graphql/generated/components'
+import {
+  HouseworkConnection,
+  ListHouseWorksDocument,
+} from '@/graphql/generated/components'
 import { useLazyQuery } from '@apollo/client'
 import { useState } from 'react'
 
 export const useHouseWorks = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [houseWorksList, setHouseWorksList] = useState<HouseworkConnection>()
   const [listHouseWorks] = useLazyQuery(ListHouseWorksDocument)
 
   const getHouseWorksList = async (familyId: string) => {
@@ -13,7 +17,7 @@ export const useHouseWorks = () => {
       const { data } = await listHouseWorks({
         variables: { familyId: familyId },
       })
-      console.log('query result data: ', data)
+      setHouseWorksList(data?.houseworks)
     } catch (error) {
       console.error('Failed to fetch house works:', error)
     } finally {
@@ -21,5 +25,5 @@ export const useHouseWorks = () => {
     }
   }
 
-  return { getHouseWorksList, isLoading }
+  return { getHouseWorksList, houseWorksList, isLoading }
 }
