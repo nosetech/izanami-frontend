@@ -6,6 +6,7 @@ query listHouseWorks($familyId: ID!) {
         id
         title
         description
+        category
         schedule
         suggestedBy {
           id
