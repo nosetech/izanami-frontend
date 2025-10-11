@@ -109,6 +109,8 @@ export type HouseworkConnection = {
   nodes?: Maybe<Array<Maybe<Housework>>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
+  /** Total number of houseworks matching the filter criteria */
+  totalCount: Scalars['Int']['output'];
 };
 
 /** An edge in a connection. */
@@ -121,6 +123,8 @@ export type HouseworkEdge = {
 };
 
 export type HouseworkFilterInput = {
+  /** Filter by categories (OR condition) */
+  categories?: InputMaybe<Array<HouseworkCategoryEnum>>;
   /** Filter by committed status */
   committed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Maximum point value */
@@ -269,7 +273,7 @@ export type ListHouseWorksQueryVariables = Exact<{
 }>;
 
 
-export type ListHouseWorksQuery = { __typename?: 'Query', houseworks: { __typename?: 'HouseworkConnection', edges?: Array<{ __typename?: 'HouseworkEdge', cursor: string, node?: { __typename?: 'Housework', id: string, title: string, description?: string | null, category: HouseworkCategoryEnum, schedule?: string | null, point: number, committed: boolean, createdAt: any, updatedAt: any, suggestedBy: { __typename?: 'User', id: string, name: string } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ListHouseWorksQuery = { __typename?: 'Query', houseworks: { __typename?: 'HouseworkConnection', totalCount: number, edges?: Array<{ __typename?: 'HouseworkEdge', cursor: string, node?: { __typename?: 'Housework', id: string, title: string, description?: string | null, category: HouseworkCategoryEnum, schedule?: string | null, point: number, committed: boolean, createdAt: any, updatedAt: any, suggestedBy: { __typename?: 'User', id: string, name: string } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 
 export const GetCurrentUserDocument = gql`
@@ -313,6 +317,7 @@ export const ListHouseWorksDocument = gql`
       hasNextPage
       hasPreviousPage
     }
+    totalCount
   }
 }
     `;

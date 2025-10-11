@@ -64,7 +64,7 @@ export function HouseWorksTemplate() {
       </Stack>
       {/* TODO: 検索結果表示の実装 */}
       <Typography variant='body1'>
-        検索結果{(houseWorksList?.edges ?? []).length}件
+        検索結果{houseWorksList?.totalCount ?? 0}件
       </Typography>
       {/* TODO: 家事一覧の実装 */}
       {isHouseWorksLoading == false && houseWorksList && (
