@@ -1,6 +1,6 @@
 'use client'
 
-import { CleaningImage } from '@/components/atoms'
+import { HouseWorkImage } from '@/components/molecules'
 import { Housework } from '@/graphql/generated/components'
 import {
   Card,
@@ -31,7 +31,11 @@ export const HouseWorkCard = (props: HouseWorkCardProps) => {
         <CardContent>
           <Stack spacing={1}>
             <Stack width='100%' alignItems='center'>
-              <CleaningImage width={150} height={110} />
+              <HouseWorkImage
+                category={housework.category}
+                width={150}
+                height={110}
+              />
             </Stack>
             <Typography variant='h2'>{housework.title}</Typography>
             <Typography variant='h4'>{housework.description}</Typography>

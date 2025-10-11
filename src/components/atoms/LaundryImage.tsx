@@ -15,15 +15,15 @@ const sparkleAnimation = keyframes`
 const BASE_WIDTH = 320
 const BASE_HEIGHT = 240
 
-interface WashingImageProps {
+interface LaundryImageProps {
   width?: number
   height?: number
 }
 
-export const WashingImage = ({
+export const LaundryImage = ({
   width = BASE_WIDTH,
   height = BASE_HEIGHT,
-}: WashingImageProps) => {
+}: LaundryImageProps) => {
   const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT)
 
   return (
