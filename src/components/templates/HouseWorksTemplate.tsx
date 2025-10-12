@@ -4,6 +4,7 @@ import { HouseWorkCard, HouseWorkSearch } from '@/components/organisms'
 import { useCurrentUser } from '@/hooks'
 import { useHouseWorks } from '@/hooks/api/useHouseWorks'
 import {
+  CircularProgress,
   FormControl,
   MenuItem,
   Select,
@@ -80,7 +81,12 @@ export function HouseWorksTemplate() {
         </Stack>
       </Stack>
       {/* TODO: 家事一覧の実装 */}
-      {isHouseWorksLoading == false && houseWorksList && (
+      {isHouseWorksLoading && (
+        <Stack alignItems='center' justifyContent='center' padding={4}>
+          <CircularProgress />
+        </Stack>
+      )}
+      {!isHouseWorksLoading && houseWorksList && (
         <Stack
           direction='row'
           justifyContent='center'
