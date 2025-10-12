@@ -1,6 +1,6 @@
 'use client'
 
-import { HouseWorkImage } from '@/components/molecules'
+import { HouseWorkImage } from '@/components/organisms'
 import { Housework } from '@/graphql/generated/components'
 import {
   Card,

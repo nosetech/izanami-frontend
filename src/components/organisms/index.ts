@@ -1,6 +1,7 @@
 export * from './AppBar'
 export * from './Footer'
 export * from './HouseWorkCard'
+export * from './HouseWorkImage'
 export * from './HouseWorkSearch'
 export * from './Login'
 export * from './Logo'
