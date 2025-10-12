@@ -3,6 +3,7 @@
 import { HouseWorkImage } from '@/components/organisms'
 import { Housework } from '@/graphql/generated/components'
 import {
+  Box,
   Card,
   CardActionArea,
   CardContent,
@@ -37,7 +38,19 @@ export const HouseWorkCard = (props: HouseWorkCardProps) => {
                 height={110}
               />
             </Stack>
-            <Typography variant='h2'>{housework.title}</Typography>
+            <Stack
+              direction='row'
+              justifyContent='space-between'
+              alignItems='center'
+            >
+              <Typography variant='h2'>{housework.title}</Typography>
+              <Box
+                p={0.5}
+                sx={{ backgroundColor: '#C5ECA3', borderRadius: '6px' }}
+              >
+                <Typography variant='h4'>{housework.point}p</Typography>
+              </Box>
+            </Stack>
             <Typography variant='h4'>{housework.description}</Typography>
             <Divider />
             <Typography variant='body1'>{housework.schedule}</Typography>

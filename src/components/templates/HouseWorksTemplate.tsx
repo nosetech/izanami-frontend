@@ -48,8 +48,7 @@ export function HouseWorksTemplate() {
         justifyContent='center'
         alignItems='center'
       >
-        {/* TODO: 検索結果表示の実装 */}
-        <Typography variant='body1'>
+        <Typography variant='h2'>
           検索結果{houseWorksList?.totalCount ?? 0}件
         </Typography>
         {/* TODO: ソート機能の実装 */}
