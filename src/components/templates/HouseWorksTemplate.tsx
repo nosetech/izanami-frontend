@@ -81,11 +81,6 @@ export function HouseWorksTemplate() {
         </Stack>
       </Stack>
       {/* TODO: 家事一覧の実装 */}
-      {isHouseWorksLoading && (
-        <Stack alignItems='center' justifyContent='center' padding={4}>
-          <CircularProgress />
-        </Stack>
-      )}
       {!isHouseWorksLoading && houseWorksList && (
         <Stack
           direction='row'
@@ -103,6 +98,11 @@ export function HouseWorksTemplate() {
                 />
               ),
           )}
+        </Stack>
+      )}
+      {isHouseWorksLoading && (
+        <Stack alignItems='center' justifyContent='center' padding={4}>
+          <CircularProgress />
         </Stack>
       )}
     </Stack>
