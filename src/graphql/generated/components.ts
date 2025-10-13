@@ -283,6 +283,67 @@ export type GetCurrentUserQuery = {
   } | null
 }
 
+export type CreateHouseworkMutationVariables = Exact<{
+  title: Scalars['String']['input']
+  description?: InputMaybe<Scalars['String']['input']>
+  category?: InputMaybe<HouseworkCategoryEnum>
+  schedule?: InputMaybe<Scalars['String']['input']>
+  point?: InputMaybe<Scalars['Int']['input']>
+  committed?: InputMaybe<Scalars['Boolean']['input']>
+}>
+
+export type CreateHouseworkMutation = {
+  __typename?: 'Mutation'
+  createHousework?: {
+    __typename?: 'CreateHouseworkMutationPayload'
+    errors: Array<string>
+    housework?: {
+      __typename?: 'Housework'
+      id: string
+      title: string
+      description?: string | null
+      category: HouseworkCategoryEnum
+      schedule?: string | null
+      point: number
+      committed: boolean
+      createdAt: any
+      updatedAt: any
+      suggestedBy: { __typename?: 'User'; id: string; name: string }
+    } | null
+  } | null
+}
+
+export type UpdateHouseworkMutationVariables = Exact<{
+  id: Scalars['ID']['input']
+  title?: InputMaybe<Scalars['String']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  category?: InputMaybe<HouseworkCategoryEnum>
+  schedule?: InputMaybe<Scalars['String']['input']>
+  point?: InputMaybe<Scalars['Int']['input']>
+  committed?: InputMaybe<Scalars['Boolean']['input']>
+}>
+
+export type UpdateHouseworkMutation = {
+  __typename?: 'Mutation'
+  updateHousework?: {
+    __typename?: 'UpdateHouseworkMutationPayload'
+    errors: Array<string>
+    housework?: {
+      __typename?: 'Housework'
+      id: string
+      title: string
+      description?: string | null
+      category: HouseworkCategoryEnum
+      schedule?: string | null
+      point: number
+      committed: boolean
+      createdAt: any
+      updatedAt: any
+      suggestedBy: { __typename?: 'User'; id: string; name: string }
+    } | null
+  } | null
+}
+
 export type ListHouseWorksQueryVariables = Exact<{
   familyId: Scalars['ID']['input']
 }>
@@ -330,6 +391,84 @@ export const GetCurrentUserDocument = gql`
         id
         name
       }
+    }
+  }
+`
+export const CreateHouseworkDocument = gql`
+  mutation createHousework(
+    $title: String!
+    $description: String
+    $category: HouseworkCategoryEnum
+    $schedule: String
+    $point: Int
+    $committed: Boolean
+  ) {
+    createHousework(
+      input: {
+        title: $title
+        description: $description
+        category: $category
+        schedule: $schedule
+        point: $point
+        committed: $committed
+      }
+    ) {
+      housework {
+        id
+        title
+        description
+        category
+        schedule
+        point
+        committed
+        createdAt
+        updatedAt
+        suggestedBy {
+          id
+          name
+        }
+      }
+      errors
+    }
+  }
+`
+export const UpdateHouseworkDocument = gql`
+  mutation updateHousework(
+    $id: ID!
+    $title: String
+    $description: String
+    $category: HouseworkCategoryEnum
+    $schedule: String
+    $point: Int
+    $committed: Boolean
+  ) {
+    updateHousework(
+      input: {
+        id: $id
+        title: $title
+        description: $description
+        category: $category
+        schedule: $schedule
+        point: $point
+        committed: $committed
+      }
+    ) {
+      housework {
+        id
+        title
+        description
+        category
+        schedule
+        point
+        committed
+        createdAt
+        updatedAt
+        suggestedBy {
+          id
+          name
+        }
+      }
+      errors
     }
   }
 `
@@ -399,6 +538,42 @@ export function getSdk(
           }),
         'getCurrentUser',
         'query',
+        variables,
+      )
+    },
+    createHousework(
+      variables: CreateHouseworkMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<CreateHouseworkMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<CreateHouseworkMutation>({
+            document: CreateHouseworkDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
+        'createHousework',
+        'mutation',
+        variables,
+      )
+    },
+    updateHousework(
+      variables: UpdateHouseworkMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<UpdateHouseworkMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<UpdateHouseworkMutation>({
+            document: UpdateHouseworkDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
+        'updateHousework',
+        'mutation',
         variables,
       )
     },

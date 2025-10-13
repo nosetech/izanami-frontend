@@ -1,0 +1,75 @@
+mutation createHousework(
+  $title: String!
+  $description: String
+  $category: HouseworkCategoryEnum
+  $schedule: String
+  $point: Int
+  $committed: Boolean
+) {
+  createHousework(
+    input: {
+      title: $title
+      description: $description
+      category: $category
+      schedule: $schedule
+      point: $point
+      committed: $committed
+    }
+  ) {
+    housework {
+      id
+      title
+      description
+      category
+      schedule
+      point
+      committed
+      createdAt
+      updatedAt
+      suggestedBy {
+        id
+        name
+      }
+    }
+    errors
+  }
+}
+
+mutation updateHousework(
+  $id: ID!
+  $title: String
+  $description: String
+  $category: HouseworkCategoryEnum
+  $schedule: String
+  $point: Int
+  $committed: Boolean
+) {
+  updateHousework(
+    input: {
+      id: $id
+      title: $title
+      description: $description
+      category: $category
+      schedule: $schedule
+      point: $point
+      committed: $committed
+    }
+  ) {
+    housework {
+      id
+      title
+      description
+      category
+      schedule
+      point
+      committed
+      createdAt
+      updatedAt
+      suggestedBy {
+        id
+        name
+      }
+    }
+    errors
+  }
+}

@@ -15,10 +15,11 @@ import {
 
 export type HouseWorkCardProps = CardProps & {
   housework: Housework
+  onClick?: () => void
 }
 
 export const HouseWorkCard = (props: HouseWorkCardProps) => {
-  const { housework, ...remainProps } = props
+  const { housework, onClick, ...remainProps } = props
 
   return (
     <Card
@@ -28,7 +29,7 @@ export const HouseWorkCard = (props: HouseWorkCardProps) => {
       }}
       {...remainProps}
     >
-      <CardActionArea>
+      <CardActionArea onClick={onClick}>
         <CardContent>
           <Stack spacing={1}>
             <Stack width='100%' alignItems='center'>

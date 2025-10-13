@@ -1,6 +1,11 @@
 'use client'
 import { PrimaryButton } from '@/components/atoms/PrimaryButton'
-import { HouseWorkCard, HouseWorkSearch } from '@/components/organisms'
+import {
+  HouseWorkCard,
+  HouseWorkModal,
+  HouseWorkSearch,
+} from '@/components/organisms'
+import { Housework } from '@/graphql/generated/components'
 import { useCurrentUser } from '@/hooks'
 import { useHouseWorks } from '@/hooks/api/useHouseWorks'
 import {
@@ -22,6 +27,10 @@ export function HouseWorksTemplate() {
     houseWorksList,
   } = useHouseWorks()
   const [sortType, setSortType] = useState('10')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedHousework, setSelectedHousework] = useState<Housework | null>(
+    null,
+  )
 
   useEffect(() => {
     if (isCurrentUserLoading == false && currentUser) {
@@ -34,13 +43,38 @@ export function HouseWorksTemplate() {
     setSortType(event.target.value as string)
   }
 
+  const handleCreateClick = () => {
+    setSelectedHousework(null)
+    setIsModalOpen(true)
+  }
+
+  const handleCardClick = (housework: Housework) => {
+    setSelectedHousework(housework)
+    setIsModalOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setSelectedHousework(null)
+  }
+
+  const handleModalSuccess = () => {
+    // Reload houseworks list after successful create/update
+    if (currentUser) {
+      getHouseWorksList(currentUser.family_id)
+    }
+  }
+
+  const isAdmin = currentUser?.role === 'admin'
+
   return (
     <Stack padding={2} spacing={3} alignItems='center'>
       <Typography fontSize='32px' variant='h1'>
         House Work
       </Typography>
-      {/* TODO: ボタン押下で家事入力モーダル画面を表示する */}
-      <PrimaryButton size='medium'>新しい家事を作成</PrimaryButton>
+      <PrimaryButton size='medium' onClick={handleCreateClick}>
+        新しい家事を作成
+      </PrimaryButton>
       <HouseWorkSearch width='600px' />
       <Stack
         direction='row'
@@ -95,6 +129,7 @@ export function HouseWorksTemplate() {
                 <HouseWorkCard
                   key={houseWorkEdge.node.id}
                   housework={houseWorkEdge.node}
+                  onClick={() => handleCardClick(houseWorkEdge.node!)}
                 />
               ),
           )}
@@ -105,6 +140,13 @@ export function HouseWorksTemplate() {
           <CircularProgress />
         </Stack>
       )}
+      <HouseWorkModal
+        open={isModalOpen}
+        onClose={handleModalClose}
+        housework={selectedHousework}
+        isAdmin={isAdmin}
+        onSuccess={handleModalSuccess}
+      />
     </Stack>
   )
 }
