@@ -3,6 +3,7 @@ import { useLogin } from '@/hooks/api/useLogin'
 import { useIsMobileSize } from '@/hooks/useIsMobileSize'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import {
+  Divider,
   IconButton,
   Menu,
   MenuItem,
@@ -16,9 +17,11 @@ import {
 import { useState } from 'react'
 
 import { Logo } from '@/components/organisms'
+import { useRouter } from 'next/navigation'
 
 export const AppBar = () => {
   const theme = useTheme()
+  const router = useRouter()
   const isMobileSize = useIsMobileSize()
   const { currentUser, isLoading } = useCurrentUser()
   const { logout } = useLogin()
@@ -43,6 +46,18 @@ export const AppBar = () => {
     await logout()
     handleMenuClose()
   }
+
+  const handleNavigation = (path: string) => () => {
+    router.push(path)
+    handleMenuClose()
+  }
+
+  const menuItems = [
+    { label: 'MyPage', onClick: handleNavigation('/mypage') },
+    { label: 'HouseWorks', onClick: handleNavigation('/houseworks') },
+  ]
+
+  const menuItemStyles = { minHeight: 'auto', py: 0.5 }
 
   return (
     <MuiAppBar
@@ -93,10 +108,17 @@ export const AppBar = () => {
                   horizontal: 'right',
                 }}
               >
-                <MenuItem
-                  onClick={handleLogout}
-                  sx={{ minHeight: 'auto', py: 0.5 }}
-                >
+                {menuItems.map((item) => (
+                  <MenuItem
+                    key={item.label}
+                    onClick={item.onClick}
+                    sx={menuItemStyles}
+                  >
+                    <Typography variant='body1'>{item.label}</Typography>
+                  </MenuItem>
+                ))}
+                <Divider />
+                <MenuItem onClick={handleLogout} sx={menuItemStyles}>
                   <Typography variant='body1'>Logout</Typography>
                 </MenuItem>
               </Menu>

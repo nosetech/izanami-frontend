@@ -3,6 +3,6 @@ export type User = {
   name: string
   email: string
   role: string
-  famiy_id: string
+  family_id: string
   token: string
 }
