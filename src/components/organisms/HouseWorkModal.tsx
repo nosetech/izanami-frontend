@@ -23,7 +23,6 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -146,12 +145,8 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
   const loading = createLoading || updateLoading
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
-      <DialogTitle>
-        <Typography variant='h2'>
-          {isEditMode ? '家事の更新' : '家事の新規作成'}
-        </Typography>
-      </DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth='tablet' fullWidth>
+      <DialogTitle>{isEditMode ? '家事の更新' : '家事の作成'}</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 1 }}>
           {/* タイトル */}
