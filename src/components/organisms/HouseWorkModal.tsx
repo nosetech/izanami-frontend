@@ -1,5 +1,6 @@
 'use client'
 
+import { ToggleButton } from '@/components/atoms'
 import {
   CreateHouseworkDocument,
   Housework,
@@ -7,6 +8,7 @@ import {
   UpdateHouseworkDocument,
 } from '@/graphql/generated/components'
 import { useMutation } from '@apollo/client'
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
   Box,
   Button,
@@ -14,6 +16,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -21,11 +24,21 @@ import {
   RadioGroup,
   Stack,
   TextField,
-  ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import * as yup from 'yup'
+
+export type HouseWorkFormInput = {
+  title: string
+  description: string
+  category: HouseworkCategoryEnum
+  schedule: string
+  point: number
+  committed: boolean
+}
 
 export type HouseWorkModalProps = {
   open: boolean
@@ -35,17 +48,46 @@ export type HouseWorkModalProps = {
   onSuccess?: () => void
 }
 
+const schema = yup.object({
+  title: yup.string().required('タイトルは必須です'),
+  description: yup.string().default(''),
+  category: yup
+    .string()
+    .oneOf(Object.values(HouseworkCategoryEnum))
+    .required()
+    .default(HouseworkCategoryEnum.COOKING),
+  schedule: yup.string().default(''),
+  point: yup.number().min(0, 'ポイントは0以上である必要があります').default(0),
+  committed: yup.boolean().default(false),
+})
+
+const TOGGLE_BUTTON_STYLE = {
+  width: '100%',
+  border: '1px solid rgba(0, 0, 0, 0.12) !important',
+}
+
 export const HouseWorkModal = (props: HouseWorkModalProps) => {
   const { open, onClose, housework, isAdmin, onSuccess } = props
   const isEditMode = !!housework
 
-  // Form state
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState<HouseworkCategoryEnum | null>(null)
-  const [schedule, setSchedule] = useState('')
-  const [point, setPoint] = useState(0)
-  const [committed, setCommitted] = useState(false)
+  // Form state with react-hook-form
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<HouseWorkFormInput>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      title: '',
+      description: '',
+      category: HouseworkCategoryEnum.COOKING,
+      schedule: '',
+      point: 0,
+      committed: false,
+    },
+  })
 
   // GraphQL Mutations
   const [createHousework, { loading: createLoading }] = useMutation(
@@ -58,74 +100,64 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
   // Initialize form with housework data when editing
   useEffect(() => {
     if (housework) {
-      setTitle(housework.title)
-      setDescription(housework.description || '')
-      setCategory(housework.category)
-      setSchedule(housework.schedule || '')
-      setPoint(housework.point)
-      setCommitted(housework.committed)
+      reset({
+        title: housework.title,
+        description: housework.description || '',
+        category: housework.category,
+        schedule: housework.schedule || '',
+        point: housework.point,
+        committed: housework.committed,
+      })
     } else {
       // Reset form for new housework
-      setTitle('')
-      setDescription('')
-      setCategory(null)
-      setSchedule('')
-      setPoint(0)
-      setCommitted(false)
+      reset({
+        title: '',
+        description: '',
+        category: HouseworkCategoryEnum.COOKING,
+        schedule: '',
+        point: 0,
+        committed: false,
+      })
     }
-  }, [housework, open])
+  }, [housework, open, reset])
 
-  const handleCategoryChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newCategory: HouseworkCategoryEnum | null,
-  ) => {
-    if (newCategory !== null) {
-      setCategory(newCategory)
-    }
-  }
-
-  const handleSubmit = async () => {
-    if (!title.trim()) {
-      toast.error('タイトルは必須です')
-      return
-    }
-
+  const handleSubmit: SubmitHandler<HouseWorkFormInput> = async (data) => {
     try {
       if (isEditMode && housework) {
         // Update existing housework
-        const { data } = await updateHousework({
+        const { data: result } = await updateHousework({
           variables: {
             id: housework.id,
-            title,
-            description: description || undefined,
-            category: category || undefined,
-            schedule: schedule || undefined,
-            point: isAdmin ? point : undefined,
-            committed: isAdmin ? committed : undefined,
+            title: data.title,
+            description: data.description || undefined,
+            category: data.category || undefined,
+            schedule: data.schedule || undefined,
+            point: isAdmin ? data.point : undefined,
+            committed: isAdmin ? data.committed : undefined,
           },
         })
 
-        if (data?.updateHousework?.errors.length) {
-          toast.error(`エラー: ${data.updateHousework.errors.join(', ')}`)
+        if (result?.updateHousework?.errors.length) {
+          toast.error(`エラー: ${result.updateHousework.errors.join(', ')}`)
           return
         }
 
         toast.success('家事を更新しました')
       } else {
         // Create new housework
-        const { data } = await createHousework({
+        const { data: result } = await createHousework({
           variables: {
-            title,
-            description: description || undefined,
-            category: category || undefined,
-            schedule: schedule || undefined,
-            point: isAdmin ? point : undefined,
-            committed: isAdmin ? committed : undefined,
+            title: data.title,
+            description: data.description || undefined,
+            category: data.category || undefined,
+            schedule: data.schedule || undefined,
+            point: isAdmin ? data.point : undefined,
+            committed: isAdmin ? data.committed : undefined,
           },
         })
 
-        if (data?.createHousework?.errors.length) {
-          toast.error(`エラー: ${data.createHousework.errors.join(', ')}`)
+        if (result?.createHousework?.errors.length) {
+          toast.error(`エラー: ${result.createHousework.errors.join(', ')}`)
           return
         }
 
@@ -147,22 +179,23 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth='tablet' fullWidth>
       <DialogTitle>{isEditMode ? '家事の更新' : '家事の作成'}</DialogTitle>
+      <Divider />
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 1 }}>
           {/* タイトル */}
           <TextField
             label='タイトル'
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            {...register('title')}
             required
             fullWidth
+            error={!!errors.title}
+            helperText={errors.title?.message}
           />
 
           {/* 説明 */}
           <TextField
             label='説明'
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            {...register('description')}
             multiline
             rows={4}
             fullWidth
@@ -171,51 +204,65 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
           {/* カテゴリ */}
           <FormControl fullWidth>
             <FormLabel>カテゴリ</FormLabel>
-            <ToggleButtonGroup
-              value={category}
-              exclusive
-              onChange={handleCategoryChange}
-              aria-label='housework category'
-              fullWidth
-            >
-              <ToggleButton
-                value={HouseworkCategoryEnum.COOKING}
-                aria-label='料理'
-              >
-                料理
-              </ToggleButton>
-              <ToggleButton
-                value={HouseworkCategoryEnum.CLEANING}
-                aria-label='掃除'
-              >
-                掃除
-              </ToggleButton>
-              <ToggleButton
-                value={HouseworkCategoryEnum.LAUNDRY}
-                aria-label='洗濯'
-              >
-                洗濯
-              </ToggleButton>
-              <ToggleButton
-                value={HouseworkCategoryEnum.SHOPPING}
-                aria-label='買い物'
-              >
-                買い物
-              </ToggleButton>
-              <ToggleButton
-                value={HouseworkCategoryEnum.OTHER}
-                aria-label='その他'
-              >
-                その他
-              </ToggleButton>
-            </ToggleButtonGroup>
+            <Controller
+              name='category'
+              control={control}
+              render={({ field }) => (
+                <ToggleButtonGroup
+                  value={field.value}
+                  exclusive
+                  onChange={(_, newValue) => {
+                    if (newValue !== null) {
+                      field.onChange(newValue)
+                    }
+                  }}
+                  aria-label='housework category'
+                  fullWidth
+                >
+                  <ToggleButton
+                    value={HouseworkCategoryEnum.COOKING}
+                    aria-label='料理'
+                    sx={TOGGLE_BUTTON_STYLE}
+                  >
+                    料理
+                  </ToggleButton>
+                  <ToggleButton
+                    value={HouseworkCategoryEnum.CLEANING}
+                    aria-label='掃除'
+                    sx={TOGGLE_BUTTON_STYLE}
+                  >
+                    掃除
+                  </ToggleButton>
+                  <ToggleButton
+                    value={HouseworkCategoryEnum.LAUNDRY}
+                    aria-label='洗濯'
+                    sx={TOGGLE_BUTTON_STYLE}
+                  >
+                    洗濯
+                  </ToggleButton>
+                  <ToggleButton
+                    value={HouseworkCategoryEnum.SHOPPING}
+                    aria-label='買い物'
+                    sx={TOGGLE_BUTTON_STYLE}
+                  >
+                    買い物
+                  </ToggleButton>
+                  <ToggleButton
+                    value={HouseworkCategoryEnum.OTHER}
+                    aria-label='その他'
+                    sx={TOGGLE_BUTTON_STYLE}
+                  >
+                    その他
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              )}
+            />
           </FormControl>
 
           {/* スケジュール */}
           <TextField
             label='スケジュール'
-            value={schedule}
-            onChange={(e) => setSchedule(e.target.value)}
+            {...register('schedule')}
             multiline
             rows={3}
             fullWidth
@@ -223,13 +270,26 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
 
           {/* ポイント (管理者のみまたは更新時はdisabledで表示) */}
           {(isAdmin || isEditMode) && (
-            <TextField
-              label='ポイント'
-              type='number'
-              value={point}
-              onChange={(e) => setPoint(parseInt(e.target.value) || 0)}
-              disabled={!isAdmin}
-              inputProps={{ min: 0, style: { width: '100px' } }}
+            <Controller
+              name='point'
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label='ポイント'
+                  type='number'
+                  value={field.value}
+                  sx={{ width: '100px' }}
+                  onChange={(e) =>
+                    field.onChange(parseInt(e.target.value) || 0)
+                  }
+                  disabled={!isAdmin}
+                  slotProps={{
+                    htmlInput: { min: 0, style: { width: '100px' } },
+                  }}
+                  error={!!errors.point}
+                  helperText={errors.point?.message}
+                />
+              )}
             />
           )}
 
@@ -237,38 +297,48 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
           {(isAdmin || isEditMode) && (
             <FormControl disabled={!isAdmin}>
               <FormLabel>承認</FormLabel>
-              <RadioGroup
-                value={committed ? 'committed' : 'uncommitted'}
-                onChange={(e) => setCommitted(e.target.value === 'committed')}
-              >
-                <FormControlLabel
-                  value='committed'
-                  control={<Radio />}
-                  label='承認'
-                />
-                <FormControlLabel
-                  value='uncommitted'
-                  control={<Radio />}
-                  label='未承認'
-                />
-              </RadioGroup>
+              <Controller
+                name='committed'
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    row
+                    value={field.value ? 'committed' : 'uncommitted'}
+                    onChange={(e) =>
+                      field.onChange(e.target.value === 'committed')
+                    }
+                  >
+                    <FormControlLabel
+                      value='uncommitted'
+                      control={<Radio />}
+                      label='未承認'
+                    />
+                    <FormControlLabel
+                      value='committed'
+                      control={<Radio />}
+                      label='承認'
+                    />
+                  </RadioGroup>
+                )}
+              />
             </FormControl>
           )}
         </Stack>
       </DialogContent>
+      <Divider />
       <DialogActions>
         <Box
           sx={{
             width: '100%',
             display: 'flex',
-            justifyContent: 'space-between',
             px: 2,
-            pb: 1,
+            py: 1,
           }}
         >
+          <Box sx={{ flex: 1 }} />
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
             <Button
-              onClick={handleSubmit}
+              onClick={handleFormSubmit(handleSubmit)}
               variant='contained'
               disabled={loading || isUpdateDisabled}
               sx={{ minWidth: '120px' }}
@@ -276,9 +346,11 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
               {isEditMode ? '更新' : '作成'}
             </Button>
           </Box>
-          <Button onClick={onClose} variant='outlined'>
-            キャンセル
-          </Button>
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+            <Button onClick={onClose} variant='outlined'>
+              キャンセル
+            </Button>
+          </Box>
         </Box>
       </DialogActions>
     </Dialog>
