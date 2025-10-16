@@ -1,6 +1,6 @@
 'use client'
 
-import { TextButton } from '@/components/atoms'
+import { TextButton, ToggleButton } from '@/components/atoms'
 import {
   Box,
   FormControl,
@@ -11,7 +11,6 @@ import {
   Stack,
   StackProps,
   TextField,
-  ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from '@mui/material'
@@ -21,20 +20,6 @@ export type HouseWorkSearchProps = StackProps
 
 const GRID_LABEL_SIZE = 2
 const GRID_INPUT_SIZE = 10
-
-const TOGGLE_BUTTON_STYLE = {
-  width: '70px',
-  border: '0.5px solid rgba(0, 0, 0, 0.12) !important',
-  '&.MuiToggleButtonGroup-grouped': {
-    borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
-  },
-  '&.Mui-selected': {
-    backgroundColor: '#ffffff',
-  },
-  '&.Mui-selected:hover': {
-    backgroundColor: '#ffffff',
-  },
-}
 
 export const HouseWorkSearch = (props: HouseWorkSearchProps) => {
   const [category, setCategory] = useState<string[]>([])
@@ -77,39 +62,19 @@ export const HouseWorkSearch = (props: HouseWorkSearchProps) => {
               aria-label='category'
               size='small'
             >
-              <ToggleButton
-                value='cooking'
-                aria-label='coking'
-                sx={TOGGLE_BUTTON_STYLE}
-              >
+              <ToggleButton value='cooking' aria-label='coking'>
                 料理
               </ToggleButton>
-              <ToggleButton
-                value='cleaning'
-                aria-label='cleaning'
-                sx={TOGGLE_BUTTON_STYLE}
-              >
+              <ToggleButton value='cleaning' aria-label='cleaning'>
                 掃除
               </ToggleButton>
-              <ToggleButton
-                value='shopping'
-                aria-label='shopping'
-                sx={TOGGLE_BUTTON_STYLE}
-              >
+              <ToggleButton value='shopping' aria-label='shopping'>
                 買い物
               </ToggleButton>
-              <ToggleButton
-                value='laundry'
-                aria-label='laundry'
-                sx={TOGGLE_BUTTON_STYLE}
-              >
+              <ToggleButton value='laundry' aria-label='laundry'>
                 洗濯
               </ToggleButton>
-              <ToggleButton
-                value='other'
-                aria-label='other'
-                sx={TOGGLE_BUTTON_STYLE}
-              >
+              <ToggleButton value='other' aria-label='other'>
                 その他
               </ToggleButton>
             </ToggleButtonGroup>
@@ -124,8 +89,10 @@ export const HouseWorkSearch = (props: HouseWorkSearchProps) => {
               <TextField
                 type='number'
                 size='small'
-                inputProps={{
-                  min: 0,
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                  },
                 }}
                 sx={{
                   background: '#ffffff',
@@ -137,8 +104,10 @@ export const HouseWorkSearch = (props: HouseWorkSearchProps) => {
               <TextField
                 type='number'
                 size='small'
-                inputProps={{
-                  min: 0,
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                  },
                 }}
                 sx={{
                   background: '#ffffff',
