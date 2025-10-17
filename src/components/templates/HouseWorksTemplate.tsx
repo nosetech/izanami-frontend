@@ -32,12 +32,26 @@ export function HouseWorksTemplate() {
     null,
   )
 
+  // Map sort type to GraphQL sort parameters
+  const getSortParams = (sortType: string) => {
+    const sortMap: Record<string, { field: string; direction: string }> = {
+      '10': { field: 'created_at', direction: 'asc' },
+      '20': { field: 'created_at', direction: 'desc' },
+      '30': { field: 'updated_at', direction: 'asc' },
+      '40': { field: 'updated_at', direction: 'desc' },
+      '50': { field: 'point', direction: 'desc' },
+      '60': { field: 'point', direction: 'asc' },
+    }
+    return sortMap[sortType]
+  }
+
   useEffect(() => {
     if (isCurrentUserLoading == false && currentUser) {
-      getHouseWorksList(currentUser.family_id)
+      const sortParams = getSortParams(sortType)
+      getHouseWorksList(currentUser.family_id, sortParams)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCurrentUserLoading, currentUser])
+  }, [isCurrentUserLoading, currentUser, sortType])
 
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortType(event.target.value as string)
@@ -61,7 +75,8 @@ export function HouseWorksTemplate() {
   const handleModalSuccess = () => {
     // Reload houseworks list after successful create/update
     if (currentUser) {
-      getHouseWorksList(currentUser.family_id)
+      const sortParams = getSortParams(sortType)
+      getHouseWorksList(currentUser.family_id, sortParams)
     }
   }
 

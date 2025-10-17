@@ -346,6 +346,7 @@ export type UpdateHouseworkMutation = {
 
 export type ListHouseWorksQueryVariables = Exact<{
   familyId: Scalars['ID']['input']
+  sort?: InputMaybe<HouseworkSortInput>
 }>
 
 export type ListHouseWorksQuery = {
@@ -473,8 +474,8 @@ export const UpdateHouseworkDocument = gql`
   }
 `
 export const ListHouseWorksDocument = gql`
-  query listHouseWorks($familyId: ID!) {
-    houseworks(familyId: $familyId) {
+  query listHouseWorks($familyId: ID!, $sort: HouseworkSortInput) {
+    houseworks(familyId: $familyId, sort: $sort) {
       edges {
         cursor
         node {

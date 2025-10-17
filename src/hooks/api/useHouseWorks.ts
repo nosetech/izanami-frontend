@@ -1,6 +1,7 @@
 'use client'
 import {
   HouseworkConnection,
+  HouseworkSortInput,
   ListHouseWorksDocument,
 } from '@/graphql/generated/components'
 import { useLazyQuery } from '@apollo/client'
@@ -11,11 +12,14 @@ export const useHouseWorks = () => {
   const [houseWorksList, setHouseWorksList] = useState<HouseworkConnection>()
   const [listHouseWorks] = useLazyQuery(ListHouseWorksDocument)
 
-  const getHouseWorksList = async (familyId: string) => {
+  const getHouseWorksList = async (
+    familyId: string,
+    sort?: HouseworkSortInput,
+  ) => {
     setIsLoading(true)
     try {
       const { data } = await listHouseWorks({
-        variables: { familyId: familyId },
+        variables: { familyId: familyId, sort: sort },
       })
       setHouseWorksList(data?.houseworks)
     } catch (error) {
