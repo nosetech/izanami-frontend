@@ -35,10 +35,10 @@ export function HouseWorksTemplate() {
   // Map sort type to GraphQL sort parameters
   const getSortParams = (sortType: string) => {
     const sortMap: Record<string, { field: string; direction: string }> = {
-      '10': { field: 'created_at', direction: 'asc' },
-      '20': { field: 'created_at', direction: 'desc' },
-      '30': { field: 'updated_at', direction: 'asc' },
-      '40': { field: 'updated_at', direction: 'desc' },
+      '10': { field: 'created_at', direction: 'desc' },
+      '20': { field: 'created_at', direction: 'asc' },
+      '30': { field: 'updated_at', direction: 'desc' },
+      '40': { field: 'updated_at', direction: 'asc' },
       '50': { field: 'point', direction: 'desc' },
       '60': { field: 'point', direction: 'asc' },
     }
@@ -101,7 +101,6 @@ export function HouseWorksTemplate() {
         <Typography variant='h2'>
           検索結果{houseWorksList?.totalCount ?? 0}件
         </Typography>
-        {/* TODO: ソート機能の実装 */}
         <Stack
           direction='row'
           spacing={1}
@@ -119,10 +118,10 @@ export function HouseWorksTemplate() {
               size='small'
               sx={{ backgroundColor: '#ffffff' }}
             >
-              <MenuItem value={10}>作成日時:早い順</MenuItem>
-              <MenuItem value={20}>作成日時:遅い順</MenuItem>
-              <MenuItem value={30}>更新日時:早い順</MenuItem>
-              <MenuItem value={40}>更新日時:遅い順</MenuItem>
+              <MenuItem value={10}>作成日時:近い順</MenuItem>
+              <MenuItem value={20}>作成日時:遠い順</MenuItem>
+              <MenuItem value={30}>更新日時:近い順</MenuItem>
+              <MenuItem value={40}>更新日時:遠い順</MenuItem>
               <MenuItem value={50}>ポイント:高い順</MenuItem>
               <MenuItem value={60}>ポイント:低い順</MenuItem>
             </Select>
