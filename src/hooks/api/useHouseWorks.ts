@@ -1,6 +1,7 @@
 'use client'
 import {
   HouseworkConnection,
+  HouseworkFilterInput,
   HouseworkSortInput,
   ListHouseWorksDocument,
 } from '@/graphql/generated/components'
@@ -15,11 +16,12 @@ export const useHouseWorks = () => {
   const getHouseWorksList = async (
     familyId: string,
     sort?: HouseworkSortInput,
+    filter?: HouseworkFilterInput,
   ) => {
     setIsLoading(true)
     try {
       const { data } = await listHouseWorks({
-        variables: { familyId: familyId, sort: sort },
+        variables: { familyId: familyId, sort: sort, filter: filter },
       })
       setHouseWorksList(data?.houseworks)
     } catch (error) {

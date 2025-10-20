@@ -140,6 +140,8 @@ export type HouseworkFilterInput = {
   categories?: InputMaybe<Array<HouseworkCategoryEnum>>
   /** Filter by committed status */
   committed?: InputMaybe<Scalars['Boolean']['input']>
+  /** Keyword search for title and description (space-separated keywords with AND condition) */
+  keyword?: InputMaybe<Scalars['String']['input']>
   /** Maximum point value */
   pointMax?: InputMaybe<Scalars['Int']['input']>
   /** Minimum point value */
@@ -347,6 +349,7 @@ export type UpdateHouseworkMutation = {
 export type ListHouseWorksQueryVariables = Exact<{
   familyId: Scalars['ID']['input']
   sort?: InputMaybe<HouseworkSortInput>
+  filter?: InputMaybe<HouseworkFilterInput>
 }>
 
 export type ListHouseWorksQuery = {
@@ -474,8 +477,12 @@ export const UpdateHouseworkDocument = gql`
   }
 `
 export const ListHouseWorksDocument = gql`
-  query listHouseWorks($familyId: ID!, $sort: HouseworkSortInput) {
-    houseworks(familyId: $familyId, sort: $sort) {
+  query listHouseWorks(
+    $familyId: ID!
+    $sort: HouseworkSortInput
+    $filter: HouseworkFilterInput
+  ) {
+    houseworks(familyId: $familyId, sort: $sort, filter: $filter) {
       edges {
         cursor
         node {

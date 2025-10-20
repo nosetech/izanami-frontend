@@ -5,7 +5,7 @@ import {
   HouseWorkModal,
   HouseWorkSearch,
 } from '@/components/organisms'
-import { Housework } from '@/graphql/generated/components'
+import { Housework, HouseworkFilterInput } from '@/graphql/generated/components'
 import { useCurrentUser } from '@/hooks'
 import { useHouseWorks } from '@/hooks/api/useHouseWorks'
 import {
@@ -27,6 +27,7 @@ export function HouseWorksTemplate() {
     houseWorksList,
   } = useHouseWorks()
   const [sortType, setSortType] = useState('10')
+  const [filter, setFilter] = useState<HouseworkFilterInput>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedHousework, setSelectedHousework] = useState<Housework | null>(
     null,
@@ -45,13 +46,18 @@ export function HouseWorksTemplate() {
     return sortMap[sortType]
   }
 
+  // Handle search filter changes
+  const handleSearchChange = (newFilter: HouseworkFilterInput) => {
+    setFilter(newFilter)
+  }
+
   useEffect(() => {
     if (isCurrentUserLoading == false && currentUser) {
       const sortParams = getSortParams(sortType)
-      getHouseWorksList(currentUser.family_id, sortParams)
+      getHouseWorksList(currentUser.family_id, sortParams, filter)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCurrentUserLoading, currentUser, sortType])
+  }, [isCurrentUserLoading, currentUser, sortType, filter])
 
   const handleSortChange = (event: SelectChangeEvent) => {
     setSortType(event.target.value as string)
@@ -76,7 +82,7 @@ export function HouseWorksTemplate() {
     // Reload houseworks list after successful create/update
     if (currentUser) {
       const sortParams = getSortParams(sortType)
-      getHouseWorksList(currentUser.family_id, sortParams)
+      getHouseWorksList(currentUser.family_id, sortParams, filter)
     }
   }
 
@@ -90,7 +96,7 @@ export function HouseWorksTemplate() {
       <PrimaryButton size='medium' onClick={handleCreateClick}>
         新しい家事を作成
       </PrimaryButton>
-      <HouseWorkSearch width='600px' />
+      <HouseWorkSearch width='600px' onSearchChange={handleSearchChange} />
       <Stack
         direction='row'
         width='800px'

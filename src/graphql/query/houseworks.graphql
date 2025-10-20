@@ -1,5 +1,9 @@
-query listHouseWorks($familyId: ID!, $sort: HouseworkSortInput) {
-  houseworks(familyId: $familyId, sort: $sort) {
+query listHouseWorks(
+  $familyId: ID!
+  $sort: HouseworkSortInput
+  $filter: HouseworkFilterInput
+) {
+  houseworks(familyId: $familyId, sort: $sort, filter: $filter) {
     edges {
       cursor
       node {
