@@ -32,16 +32,47 @@ const DEBOUNCE_DELAY = 500 // 500ms debounce for keyword search
 // Validation schema for search form
 const searchSchema = yup.object().shape({
   keyword: yup.string().default(''),
+  categories: yup.array().of(yup.string()).default([]),
   pointMin: yup
-    .number()
-    .typeError('ポイントは数値である必要があります')
+    .string()
     .nullable()
-    .min(0, 'ポイントは0以上である必要があります'),
+    .transform((value) => (value === '' || value === null ? null : value))
+    .test(
+      'is-valid-number',
+      'ポイントは数値である必要があります',
+      function (value) {
+        if (value === null || value === undefined) return true
+        return !isNaN(Number(value)) && isFinite(Number(value))
+      },
+    )
+    .test(
+      'is-non-negative',
+      'ポイントは0以上である必要があります',
+      function (value) {
+        if (value === null || value === undefined) return true
+        return Number(value) >= 0
+      },
+    ),
   pointMax: yup
-    .number()
-    .typeError('ポイントは数値である必要があります')
+    .string()
     .nullable()
-    .min(0, 'ポイントは0以上である必要があります'),
+    .transform((value) => (value === '' || value === null ? null : value))
+    .test(
+      'is-valid-number',
+      'ポイントは数値である必要があります',
+      function (value) {
+        if (value === null || value === undefined) return true
+        return !isNaN(Number(value)) && isFinite(Number(value))
+      },
+    )
+    .test(
+      'is-non-negative',
+      'ポイントは0以上である必要があります',
+      function (value) {
+        if (value === null || value === undefined) return true
+        return Number(value) >= 0
+      },
+    ),
   committed: yup.string().oneOf(['all', 'true', 'false']).default('all'),
 })
 
@@ -156,36 +187,44 @@ export const HouseWorkSearch = ({
           committed: overrides?.committed ?? committed,
         }
 
-        // Validate form data
-        await searchSchema.validate(formData, { abortEarly: false })
+        // Validate and cast form data (transform is applied during cast)
+        const validatedData = await searchSchema.validate(formData, {
+          abortEarly: false,
+        })
         setErrors({})
 
         // Build filter object
         const filter: HouseworkFilterInput = {}
 
         // Add keyword filter (search in title and description)
-        if (formData.keyword.trim()) {
-          filter.keyword = formData.keyword.trim()
+        if (validatedData.keyword.trim()) {
+          filter.keyword = validatedData.keyword.trim()
         }
 
         // Add categories filter
-        if (formData.categories.length > 0) {
-          filter.categories = formData.categories.map((cat) =>
-            cat.toUpperCase(),
-          ) as HouseworkCategoryEnum[]
+        if (validatedData.categories.length > 0) {
+          filter.categories = validatedData.categories
+            .filter((cat) => cat != null)
+            .map((cat) => cat.toUpperCase()) as HouseworkCategoryEnum[]
         }
 
-        // Add point range filter
-        if (formData.pointMin) {
-          filter.pointMin = parseInt(formData.pointMin, 10)
+        // Add point range filter (ブランク値は null に変換されている)
+        if (
+          validatedData.pointMin !== null &&
+          validatedData.pointMin !== undefined
+        ) {
+          filter.pointMin = parseInt(validatedData.pointMin, 10)
         }
-        if (formData.pointMax) {
-          filter.pointMax = parseInt(formData.pointMax, 10)
+        if (
+          validatedData.pointMax !== null &&
+          validatedData.pointMax !== undefined
+        ) {
+          filter.pointMax = parseInt(validatedData.pointMax, 10)
         }
 
         // Add commitment status filter
-        if (formData.committed !== 'all') {
-          filter.committed = formData.committed === 'true'
+        if (validatedData.committed !== 'all') {
+          filter.committed = validatedData.committed === 'true'
         }
 
         // Trigger search callback
