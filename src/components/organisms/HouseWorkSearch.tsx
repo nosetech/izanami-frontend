@@ -40,7 +40,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-valid-number',
       'ポイントは数値である必要があります',
-      function(value) {
+      function (value) {
         if (value === null || value === undefined) return true
         return !isNaN(Number(value)) && isFinite(Number(value))
       },
@@ -48,7 +48,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-non-negative',
       'ポイントは0以上である必要があります',
-      function(value) {
+      function (value) {
         if (value === null || value === undefined) return true
         return Number(value) >= 0
       },
@@ -60,7 +60,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-valid-number',
       'ポイントは数値である必要があります',
-      function(value) {
+      function (value) {
         if (value === null || value === undefined) return true
         return !isNaN(Number(value)) && isFinite(Number(value))
       },
@@ -68,7 +68,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-non-negative',
       'ポイントは0以上である必要があります',
-      function(value) {
+      function (value) {
         if (value === null || value === undefined) return true
         return Number(value) >= 0
       },
