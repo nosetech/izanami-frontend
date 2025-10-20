@@ -40,7 +40,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-valid-number',
       'ポイントは数値である必要があります',
-      function (value) {
+      function(value) {
         if (value === null || value === undefined) return true
         return !isNaN(Number(value)) && isFinite(Number(value))
       },
@@ -48,7 +48,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-non-negative',
       'ポイントは0以上である必要があります',
-      function (value) {
+      function(value) {
         if (value === null || value === undefined) return true
         return Number(value) >= 0
       },
@@ -60,7 +60,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-valid-number',
       'ポイントは数値である必要があります',
-      function (value) {
+      function(value) {
         if (value === null || value === undefined) return true
         return !isNaN(Number(value)) && isFinite(Number(value))
       },
@@ -68,7 +68,7 @@ const searchSchema = yup.object().shape({
     .test(
       'is-non-negative',
       'ポイントは0以上である必要があります',
-      function (value) {
+      function(value) {
         if (value === null || value === undefined) return true
         return Number(value) >= 0
       },
@@ -126,27 +126,39 @@ export const HouseWorkSearch = ({
     executeSearch({ committed: newCommitted })
   }
 
+  // Block invalid characters for point input
+  const handlePointKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    // 「-」「+」「e」「E」などの入力をブロック
+    if (['-', '+', 'e', 'E'].includes(event.key)) {
+      event.preventDefault()
+    }
+  }
+
   // Handle point min change
   const handlePointMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPointMin(event.target.value)
+    // 数字のみを許可（非数字を削除）
+    const numericValue = event.target.value.replace(/[^0-9]/g, '')
+    setPointMin(numericValue)
     // Debounce the search
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current)
     }
     debounceTimer.current = setTimeout(() => {
-      executeSearch({ pointMin: event.target.value })
+      executeSearch({ pointMin: numericValue })
     }, DEBOUNCE_DELAY)
   }
 
   // Handle point max change
   const handlePointMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPointMax(event.target.value)
+    // 数字のみを許可（非数字を削除）
+    const numericValue = event.target.value.replace(/[^0-9]/g, '')
+    setPointMax(numericValue)
     // Debounce the search
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current)
     }
     debounceTimer.current = setTimeout(() => {
-      executeSearch({ pointMax: event.target.value })
+      executeSearch({ pointMax: numericValue })
     }, DEBOUNCE_DELAY)
   }
 
@@ -319,7 +331,7 @@ export const HouseWorkSearch = ({
             <Typography variant='body1'>ポイント</Typography>
           </Grid>
           <Grid size={GRID_INPUT_SIZE}>
-            <Stack direction='row' spacing={1} alignItems='flex-start'>
+            <Stack direction='row' spacing={1} alignItems='center'>
               <Stack>
                 <TextField
                   type='number'
@@ -327,10 +339,13 @@ export const HouseWorkSearch = ({
                   placeholder='最小値'
                   value={pointMin}
                   onChange={handlePointMinChange}
+                  onKeyDown={handlePointKeyDown}
                   error={!!errors.pointMin}
                   slotProps={{
                     htmlInput: {
                       min: 0,
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
                     },
                   }}
                   sx={{
@@ -355,10 +370,13 @@ export const HouseWorkSearch = ({
                   placeholder='最大値'
                   value={pointMax}
                   onChange={handlePointMaxChange}
+                  onKeyDown={handlePointKeyDown}
                   error={!!errors.pointMax}
                   slotProps={{
                     htmlInput: {
                       min: 0,
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
                     },
                   }}
                   sx={{
