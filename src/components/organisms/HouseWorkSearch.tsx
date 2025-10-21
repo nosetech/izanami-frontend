@@ -108,6 +108,8 @@ export const HouseWorkSearch = ({
 
   // Debounce timer ref for keyword search
   const debounceTimer = useRef<NodeJS.Timeout | null>(null)
+  // Track if component has mounted to avoid infinite loops
+  const hasExecutedInitialSearch = useRef(false)
 
   // Reset all filters to default
   const handleResetFilters = () => {
@@ -287,6 +289,76 @@ export const HouseWorkSearch = ({
     },
     [keyword, categories, pointMin, pointMax, committed, onSearchChange],
   )
+
+  // Execute search on mount with restored values from localStorage
+  // Only execute once on initial mount to avoid infinite loops
+  useEffect(() => {
+    if (hasExecutedInitialSearch.current) return
+
+    const executeInitialSearch = async () => {
+      const formData = {
+        keyword,
+        categories,
+        pointMin,
+        pointMax,
+        committed,
+      }
+
+      try {
+        const validatedData = await searchSchema.validate(formData, {
+          abortEarly: false,
+        })
+
+        const filter: HouseworkFilterInput = {}
+
+        if (validatedData.keyword.trim()) {
+          filter.keyword = validatedData.keyword.trim()
+        }
+
+        if (validatedData.categories.length > 0) {
+          filter.categories = validatedData.categories
+            .filter((cat) => cat != null)
+            .map((cat) => cat.toUpperCase()) as HouseworkCategoryEnum[]
+        }
+
+        if (
+          validatedData.pointMin !== null &&
+          validatedData.pointMin !== undefined
+        ) {
+          filter.pointMin = parseInt(validatedData.pointMin, 10)
+        }
+
+        if (
+          validatedData.pointMax !== null &&
+          validatedData.pointMax !== undefined
+        ) {
+          filter.pointMax = parseInt(validatedData.pointMax, 10)
+        }
+
+        if (validatedData.committed !== 'all') {
+          filter.committed = validatedData.committed === 'true'
+        }
+
+        if (onSearchChange) {
+          onSearchChange(filter)
+        }
+      } catch (error) {
+        if (error instanceof yup.ValidationError) {
+          const errorMap: Record<string, string> = {}
+          error.inner.forEach((err) => {
+            if (err.path) {
+              errorMap[err.path] = err.message
+            }
+          })
+          setErrors(errorMap)
+        }
+      }
+    }
+
+    executeInitialSearch()
+    hasExecutedInitialSearch.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Cleanup debounce timer on unmount
   useEffect(() => {

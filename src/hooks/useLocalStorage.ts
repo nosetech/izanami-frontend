@@ -1,13 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 /**
  * useLocalStorage Hook
  * localStorage との連携を簡潔に実装するカスタムフック
  * - SSR 環境でのエラーハンドリング
  * - localStorage が利用できない環境への対応
- * - 初回レンダリング時の値復元
+ * - 初回レンダリング時の値復元（同期的に実行）
  *
  * @param key - localStorage のキー名
  * @param initialValue - 初期値（復元データがない場合に使用）
@@ -17,31 +17,32 @@ export const useLocalStorage = <T>(
   key: string,
   initialValue: T,
 ): [T, (value: T | ((val: T) => T)) => void] => {
-  // useState で値を管理
-  const [storedValue, setStoredValue] = useState<T>(initialValue)
-  const [isClient, setIsClient] = useState(false)
-
-  // クライアント側でのみ実行
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  // localStorage から値を復元
-  useEffect(() => {
-    if (!isClient) return
-
+  // 初期値を計算する関数（同期的に localStorage から復元を試みる）
+  const getInitialValue = (): T => {
     try {
+      // SSR 対応: サーバーサイドでは window が存在しない
+      if (typeof window === 'undefined') {
+        return initialValue
+      }
+
       // localStorage が利用可能か確認
-      if (typeof window !== 'undefined' && window.localStorage) {
-        const item = window.localStorage.getItem(key)
-        if (item) {
-          setStoredValue(JSON.parse(item))
-        }
+      if (!window.localStorage) {
+        return initialValue
+      }
+
+      const item = window.localStorage.getItem(key)
+      if (item) {
+        return JSON.parse(item)
       }
     } catch (error) {
       console.error(`Failed to read from localStorage (key: ${key}):`, error)
     }
-  }, [key, isClient])
+
+    return initialValue
+  }
+
+  // useState で値を管理（初期値関数を使用して同期的に復元）
+  const [storedValue, setStoredValue] = useState<T>(getInitialValue)
 
   // setValue 関数：値を更新して localStorage に保存
   const setValue = useCallback(
