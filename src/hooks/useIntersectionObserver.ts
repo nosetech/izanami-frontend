@@ -23,16 +23,25 @@ export const useIntersectionObserver = (
   }, [callback])
 
   useEffect(() => {
+    if (!ref.current) return
+
     const observer = new IntersectionObserver(([entry]) => {
+      // デバッグ: Intersection Observer の動作を確認
+      console.log(
+        '[useIntersectionObserver] isIntersecting:',
+        entry.isIntersecting,
+        'ratio:',
+        entry.intersectionRatio,
+      )
+
       // 要素がビューポートに入ったときにコールバックを実行
       if (entry.isIntersecting) {
+        console.log('[useIntersectionObserver] Calling callback')
         callbackRef.current()
       }
     }, options)
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
+    observer.observe(ref.current)
 
     return () => {
       observer.disconnect()

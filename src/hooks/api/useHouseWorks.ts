@@ -37,9 +37,18 @@ export const useHouseWorks = () => {
           },
           fetchPolicy: fetchNetworkOnly ? 'network-only' : 'cache-first',
         })
+        const pageInfo = data?.houseworks?.pageInfo
+        console.log(
+          '[getHouseWorksList] Initial fetch - edges:',
+          data?.houseworks?.edges?.length,
+          'hasNextPage:',
+          pageInfo?.hasNextPage,
+          'endCursor:',
+          pageInfo?.endCursor,
+        )
         setHouseWorksList(data?.houseworks)
-        setEndCursor(data?.houseworks?.pageInfo?.endCursor ?? null)
-        setHasNextPage(data?.houseworks?.pageInfo?.hasNextPage ?? false)
+        setEndCursor(pageInfo?.endCursor ?? null)
+        setHasNextPage(pageInfo?.hasNextPage ?? false)
       } catch (error) {
         console.error('Failed to fetch house works:', error)
       } finally {
@@ -56,11 +65,24 @@ export const useHouseWorks = () => {
       sort?: HouseworkSortInput,
       filter?: HouseworkFilterInput,
     ) => {
-      if (!endCursor || !hasNextPage) return
-      if (isLoadingMore) return
+      console.log(
+        '[loadMoreHouseWorks] Called with endCursor:',
+        endCursor,
+        'hasNextPage:',
+        hasNextPage,
+      )
+
+      if (!endCursor || !hasNextPage) {
+        console.log('[loadMoreHouseWorks] Returning early - no more pages')
+        return
+      }
 
       setIsLoadingMore(true)
       try {
+        console.log(
+          '[loadMoreHouseWorks] Fetching next page with after:',
+          endCursor,
+        )
         const { data } = await listHouseWorks({
           variables: {
             familyId: familyId,
@@ -71,28 +93,44 @@ export const useHouseWorks = () => {
           },
         })
 
+        const newEdges = data?.houseworks?.edges ?? []
+        console.log(
+          '[loadMoreHouseWorks] Fetched',
+          newEdges.length,
+          'new items',
+        )
+
         // 既存データと新規データを統合
         setHouseWorksList((prevList) => {
           if (!prevList) return data?.houseworks
 
-          return {
+          const combined = {
             ...data?.houseworks,
-            edges: [
-              ...(prevList.edges ?? []),
-              ...(data?.houseworks?.edges ?? []),
-            ],
+            edges: [...(prevList.edges ?? []), ...newEdges],
           }
+          console.log(
+            '[loadMoreHouseWorks] Total edges after merge:',
+            combined.edges?.length,
+          )
+          return combined
         })
 
-        setEndCursor(data?.houseworks?.pageInfo?.endCursor ?? null)
-        setHasNextPage(data?.houseworks?.pageInfo?.hasNextPage ?? false)
+        const newPageInfo = data?.houseworks?.pageInfo
+        setEndCursor(newPageInfo?.endCursor ?? null)
+        setHasNextPage(newPageInfo?.hasNextPage ?? false)
+        console.log(
+          '[loadMoreHouseWorks] Next page info - hasNextPage:',
+          newPageInfo?.hasNextPage,
+          'endCursor:',
+          newPageInfo?.endCursor,
+        )
       } catch (error) {
         console.error('Failed to load more house works:', error)
       } finally {
         setIsLoadingMore(false)
       }
     },
-    [endCursor, hasNextPage, isLoadingMore, listHouseWorks],
+    [endCursor, hasNextPage, listHouseWorks],
   )
 
   return {

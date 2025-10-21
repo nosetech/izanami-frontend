@@ -21,7 +21,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 export function HouseWorksTemplate() {
   const { currentUser, isLoading: isCurrentUserLoading } = useCurrentUser()
@@ -45,9 +45,25 @@ export function HouseWorksTemplate() {
 
   // 無限スクロール時に次ページを読み込む
   const handleLoadMore = useCallback(() => {
+    // デバッグ: 何度呼ばれているか確認
+    console.log(
+      '[handleLoadMore] Intersection detected - hasNextPage:',
+      hasNextPage,
+      'isLoadingMore:',
+      isLoadingMore,
+      'isHouseWorksLoading:',
+      isHouseWorksLoading,
+    )
+
     if (currentUser && hasNextPage && !isLoadingMore && !isHouseWorksLoading) {
+      console.log(
+        '[handleLoadMore] Loading more items... Current total:',
+        houseWorksList?.edges?.length,
+      )
       const sortParams = getSortParams(sortType)
       loadMoreHouseWorks(currentUser.family_id, sortParams, filter)
+    } else {
+      console.log('[handleLoadMore] Conditions not met')
     }
   }, [
     currentUser,
@@ -57,10 +73,23 @@ export function HouseWorksTemplate() {
     sortType,
     filter,
     loadMoreHouseWorks,
+    houseWorksList?.edges?.length,
   ])
 
+  // Intersection Observer のオプションを useMemo で保持
+  // 毎回同じオブジェクト参照を使用することで observer の再生成を防ぐ
+  const intersectionOptions = useMemo(
+    () => ({
+      threshold: 0.1,
+    }),
+    [],
+  )
+
   // センチネル要素の ref（画面下部に配置してスクロール検出）
-  const sentinelRef = useIntersectionObserver(handleLoadMore)
+  const sentinelRef = useIntersectionObserver(
+    handleLoadMore,
+    intersectionOptions,
+  )
 
   // Map sort type to GraphQL sort parameters
   const getSortParams = (sortType: string) => {
