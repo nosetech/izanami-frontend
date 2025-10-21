@@ -69,6 +69,7 @@ export const useHouseWorks = () => {
             first: 10,
             after: endCursor,
           },
+          fetchPolicy: 'network-only',
         })
 
         const newEdges = data?.houseworks?.edges ?? []
