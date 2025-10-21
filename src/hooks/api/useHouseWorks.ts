@@ -22,7 +22,7 @@ export const useHouseWorks = () => {
       familyId: string,
       sort?: HouseworkSortInput,
       filter?: HouseworkFilterInput,
-      fetchNetworkOnly?: boolean = false,
+      fetchNetworkOnly: boolean = false,
     ) => {
       setIsLoading(true)
       setEndCursor(null)
