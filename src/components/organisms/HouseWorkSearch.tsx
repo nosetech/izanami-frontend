@@ -5,6 +5,7 @@ import {
   HouseworkCategoryEnum,
   HouseworkFilterInput,
 } from '@/graphql/generated/components'
+import { useLocalStorage } from '@/hooks'
 import {
   Box,
   FormControl,
@@ -80,12 +81,27 @@ export const HouseWorkSearch = ({
   onSearchChange,
   ...props
 }: HouseWorkSearchProps) => {
-  // Form state
-  const [keyword, setKeyword] = useState('')
-  const [categories, setCategories] = useState<string[]>([])
-  const [pointMin, setPointMin] = useState<string>('')
-  const [pointMax, setPointMax] = useState<string>('')
-  const [committed, setCommitted] = useState('all')
+  // Form state with localStorage persistence
+  const [keyword, setKeyword] = useLocalStorage<string>(
+    'housework-search-keyword',
+    '',
+  )
+  const [categories, setCategories] = useLocalStorage<string[]>(
+    'housework-search-categories',
+    [],
+  )
+  const [pointMin, setPointMin] = useLocalStorage<string>(
+    'housework-search-pointMin',
+    '',
+  )
+  const [pointMax, setPointMax] = useLocalStorage<string>(
+    'housework-search-pointMax',
+    '',
+  )
+  const [committed, setCommitted] = useLocalStorage<string>(
+    'housework-search-committed',
+    'all',
+  )
 
   // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -101,6 +117,19 @@ export const HouseWorkSearch = ({
     setPointMax('')
     setCommitted('all')
     setErrors({})
+
+    // Clear localStorage
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem('housework-search-keyword')
+        window.localStorage.removeItem('housework-search-categories')
+        window.localStorage.removeItem('housework-search-pointMin')
+        window.localStorage.removeItem('housework-search-pointMax')
+        window.localStorage.removeItem('housework-search-committed')
+      }
+    } catch (error) {
+      console.error('Failed to clear localStorage:', error)
+    }
 
     // Trigger search with empty filter
     if (onSearchChange) {
