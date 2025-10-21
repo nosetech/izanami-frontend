@@ -111,7 +111,7 @@ export function HouseWorksTemplate() {
     // Reload houseworks list after successful create/update
     if (currentUser) {
       const sortParams = getSortParams(sortType)
-      getHouseWorksList(currentUser.family_id, sortParams, filter)
+      getHouseWorksList(currentUser.family_id, sortParams, filter, true)
     }
   }
 

@@ -22,6 +22,7 @@ export const useHouseWorks = () => {
       familyId: string,
       sort?: HouseworkSortInput,
       filter?: HouseworkFilterInput,
+      fetchNetworkOnly?: boolean = false,
     ) => {
       setIsLoading(true)
       setEndCursor(null)
@@ -34,6 +35,7 @@ export const useHouseWorks = () => {
             filter: filter,
             first: 10,
           },
+          fetchPolicy: fetchNetworkOnly ? 'network-only' : 'cache-first',
         })
         setHouseWorksList(data?.houseworks)
         setEndCursor(data?.houseworks?.pageInfo?.endCursor ?? null)
