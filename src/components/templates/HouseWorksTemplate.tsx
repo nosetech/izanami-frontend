@@ -6,7 +6,11 @@ import {
   HouseWorkSearch,
 } from '@/components/organisms'
 import { Housework, HouseworkFilterInput } from '@/graphql/generated/components'
-import { useCurrentUser, useLocalStorage } from '@/hooks'
+import {
+  useCurrentUser,
+  useIntersectionObserver,
+  useLocalStorage,
+} from '@/hooks'
 import { useHouseWorks } from '@/hooks/api/useHouseWorks'
 import {
   CircularProgress,
@@ -17,14 +21,17 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export function HouseWorksTemplate() {
   const { currentUser, isLoading: isCurrentUserLoading } = useCurrentUser()
   const {
     isLoading: isHouseWorksLoading,
+    isLoadingMore,
     getHouseWorksList,
+    loadMoreHouseWorks,
     houseWorksList,
+    hasNextPage,
   } = useHouseWorks()
   const [sortType, setSortType] = useLocalStorage<string>(
     'housework-sort-type',
@@ -35,6 +42,25 @@ export function HouseWorksTemplate() {
   const [selectedHousework, setSelectedHousework] = useState<Housework | null>(
     null,
   )
+
+  // 無限スクロール時に次ページを読み込む
+  const handleLoadMore = useCallback(() => {
+    if (currentUser && hasNextPage && !isLoadingMore && !isHouseWorksLoading) {
+      const sortParams = getSortParams(sortType)
+      loadMoreHouseWorks(currentUser.family_id, sortParams, filter)
+    }
+  }, [
+    currentUser,
+    hasNextPage,
+    isLoadingMore,
+    isHouseWorksLoading,
+    sortType,
+    filter,
+    loadMoreHouseWorks,
+  ])
+
+  // センチネル要素の ref（画面下部に配置してスクロール検出）
+  const sentinelRef = useIntersectionObserver(handleLoadMore)
 
   // Map sort type to GraphQL sort parameters
   const getSortParams = (sortType: string) => {
@@ -137,7 +163,7 @@ export function HouseWorksTemplate() {
           </FormControl>
         </Stack>
       </Stack>
-      {/* TODO: 家事一覧の実装 */}
+      {/* 家事一覧（無限スクロール対応） */}
       {!isHouseWorksLoading && houseWorksList && (
         <Stack
           direction='row'
@@ -162,6 +188,16 @@ export function HouseWorksTemplate() {
         <Stack alignItems='center' justifyContent='center' padding={4}>
           <CircularProgress />
         </Stack>
+      )}
+      {/* 無限スクロール用センチネル要素 */}
+      {!isHouseWorksLoading && hasNextPage && (
+        <div ref={sentinelRef} style={{ height: '100px' }}>
+          {isLoadingMore && (
+            <Stack alignItems='center' justifyContent='center' padding={2}>
+              <CircularProgress size={32} />
+            </Stack>
+          )}
+        </div>
       )}
       <HouseWorkModal
         open={isModalOpen}

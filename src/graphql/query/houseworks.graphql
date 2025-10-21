@@ -2,8 +2,9 @@ query listHouseWorks(
   $familyId: ID!
   $sort: HouseworkSortInput
   $filter: HouseworkFilterInput
+  $after: String
 ) {
-  houseworks(familyId: $familyId, sort: $sort, filter: $filter) {
+  houseworks(familyId: $familyId, sort: $sort, filter: $filter, after: $after) {
     edges {
       cursor
       node {
