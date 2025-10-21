@@ -350,6 +350,8 @@ export type ListHouseWorksQueryVariables = Exact<{
   familyId: Scalars['ID']['input']
   sort?: InputMaybe<HouseworkSortInput>
   filter?: InputMaybe<HouseworkFilterInput>
+  first?: InputMaybe<Scalars['Int']['input']>
+  after?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type ListHouseWorksQuery = {
@@ -481,8 +483,16 @@ export const ListHouseWorksDocument = gql`
     $familyId: ID!
     $sort: HouseworkSortInput
     $filter: HouseworkFilterInput
+    $first: Int
+    $after: String
   ) {
-    houseworks(familyId: $familyId, sort: $sort, filter: $filter) {
+    houseworks(
+      familyId: $familyId
+      sort: $sort
+      filter: $filter
+      first: $first
+      after: $after
+    ) {
       edges {
         cursor
         node {
