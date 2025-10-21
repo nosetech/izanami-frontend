@@ -5,6 +5,7 @@ import {
   HouseworkCategoryEnum,
   HouseworkFilterInput,
 } from '@/graphql/generated/components'
+import { useLocalStorage } from '@/hooks'
 import {
   Box,
   FormControl,
@@ -80,18 +81,35 @@ export const HouseWorkSearch = ({
   onSearchChange,
   ...props
 }: HouseWorkSearchProps) => {
-  // Form state
-  const [keyword, setKeyword] = useState('')
-  const [categories, setCategories] = useState<string[]>([])
-  const [pointMin, setPointMin] = useState<string>('')
-  const [pointMax, setPointMax] = useState<string>('')
-  const [committed, setCommitted] = useState('all')
+  // Form state with localStorage persistence
+  const [keyword, setKeyword] = useLocalStorage<string>(
+    'housework-search-keyword',
+    '',
+  )
+  const [categories, setCategories] = useLocalStorage<string[]>(
+    'housework-search-categories',
+    [],
+  )
+  const [pointMin, setPointMin] = useLocalStorage<string>(
+    'housework-search-pointMin',
+    '',
+  )
+  const [pointMax, setPointMax] = useLocalStorage<string>(
+    'housework-search-pointMax',
+    '',
+  )
+  const [committed, setCommitted] = useLocalStorage<string>(
+    'housework-search-committed',
+    'all',
+  )
 
   // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   // Debounce timer ref for keyword search
   const debounceTimer = useRef<NodeJS.Timeout | null>(null)
+  // Track if component has mounted to avoid infinite loops
+  const hasExecutedInitialSearch = useRef(false)
 
   // Reset all filters to default
   const handleResetFilters = () => {
@@ -101,6 +119,19 @@ export const HouseWorkSearch = ({
     setPointMax('')
     setCommitted('all')
     setErrors({})
+
+    // Clear localStorage
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem('housework-search-keyword')
+        window.localStorage.removeItem('housework-search-categories')
+        window.localStorage.removeItem('housework-search-pointMin')
+        window.localStorage.removeItem('housework-search-pointMax')
+        window.localStorage.removeItem('housework-search-committed')
+      }
+    } catch (error) {
+      console.error('Failed to clear localStorage:', error)
+    }
 
     // Trigger search with empty filter
     if (onSearchChange) {
@@ -258,6 +289,76 @@ export const HouseWorkSearch = ({
     },
     [keyword, categories, pointMin, pointMax, committed, onSearchChange],
   )
+
+  // Execute search on mount with restored values from localStorage
+  // Only execute once on initial mount to avoid infinite loops
+  useEffect(() => {
+    if (hasExecutedInitialSearch.current) return
+
+    const executeInitialSearch = async () => {
+      const formData = {
+        keyword,
+        categories,
+        pointMin,
+        pointMax,
+        committed,
+      }
+
+      try {
+        const validatedData = await searchSchema.validate(formData, {
+          abortEarly: false,
+        })
+
+        const filter: HouseworkFilterInput = {}
+
+        if (validatedData.keyword.trim()) {
+          filter.keyword = validatedData.keyword.trim()
+        }
+
+        if (validatedData.categories.length > 0) {
+          filter.categories = validatedData.categories
+            .filter((cat) => cat != null)
+            .map((cat) => cat.toUpperCase()) as HouseworkCategoryEnum[]
+        }
+
+        if (
+          validatedData.pointMin !== null &&
+          validatedData.pointMin !== undefined
+        ) {
+          filter.pointMin = parseInt(validatedData.pointMin, 10)
+        }
+
+        if (
+          validatedData.pointMax !== null &&
+          validatedData.pointMax !== undefined
+        ) {
+          filter.pointMax = parseInt(validatedData.pointMax, 10)
+        }
+
+        if (validatedData.committed !== 'all') {
+          filter.committed = validatedData.committed === 'true'
+        }
+
+        if (onSearchChange) {
+          onSearchChange(filter)
+        }
+      } catch (error) {
+        if (error instanceof yup.ValidationError) {
+          const errorMap: Record<string, string> = {}
+          error.inner.forEach((err) => {
+            if (err.path) {
+              errorMap[err.path] = err.message
+            }
+          })
+          setErrors(errorMap)
+        }
+      }
+    }
+
+    executeInitialSearch()
+    hasExecutedInitialSearch.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Cleanup debounce timer on unmount
   useEffect(() => {

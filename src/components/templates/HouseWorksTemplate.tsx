@@ -6,7 +6,7 @@ import {
   HouseWorkSearch,
 } from '@/components/organisms'
 import { Housework, HouseworkFilterInput } from '@/graphql/generated/components'
-import { useCurrentUser } from '@/hooks'
+import { useCurrentUser, useLocalStorage } from '@/hooks'
 import { useHouseWorks } from '@/hooks/api/useHouseWorks'
 import {
   CircularProgress,
@@ -26,7 +26,10 @@ export function HouseWorksTemplate() {
     getHouseWorksList,
     houseWorksList,
   } = useHouseWorks()
-  const [sortType, setSortType] = useState('10')
+  const [sortType, setSortType] = useLocalStorage<string>(
+    'housework-sort-type',
+    '10',
+  )
   const [filter, setFilter] = useState<HouseworkFilterInput>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedHousework, setSelectedHousework] = useState<Housework | null>(
