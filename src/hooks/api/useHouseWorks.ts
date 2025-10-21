@@ -28,7 +28,12 @@ export const useHouseWorks = () => {
       setHasNextPage(false)
       try {
         const { data } = await listHouseWorks({
-          variables: { familyId: familyId, sort: sort, filter: filter },
+          variables: {
+            familyId: familyId,
+            sort: sort,
+            filter: filter,
+            first: 10,
+          },
         })
         setHouseWorksList(data?.houseworks)
         setEndCursor(data?.houseworks?.pageInfo?.endCursor ?? null)
@@ -59,6 +64,7 @@ export const useHouseWorks = () => {
             familyId: familyId,
             sort: sort,
             filter: filter,
+            first: 10,
             after: endCursor,
           },
         })
