@@ -14,8 +14,7 @@
       "Bash(yarn add zustand)",
       "Bash(find:*)",
       "Bash(yarn format:check)",
-      "mcp__mui-mcp__useMuiDocs",
-      "Bash(git commit -m \"$(cat <<''EOF''\n無限スクロール: バグ修正とデバッグログ追加\n\n## 修正内容\n\n### 問題\n- 11件以上のデータがある場合、11件目以降が表示できない\n- スクロールしても loadMoreHouseWorks が実行されていない\n\n### 原因\n1. useCallback の依存配列に isLoadingMore が含まれていた\n   - ページ読み込み中に isLoadingMore が true → false に変わると、新しい loadMoreHouseWorks 関数が生成される\n   - これによって handleLoadMore も再生成され、Intersection Observer が無効化される\n\n2. Intersection Observer の threshold 設定がなかった\n   - デフォルトでは要素が完全にビューポート内に入る必要があり、センチネル要素が検出されない可能性がある\n\n### 修正\n1. useHouseWorks.ts の loadMoreHouseWorks useCallback から isLoadingMore を依存配列から削除\n2. HouseWorksTemplate.tsx で Intersection Observer に threshold: 0.1 を指定\n3. useMemo でオプションオブジェクトを保持して参照の安定性を確保\n4. デバッグログを追加して問題の原因特定が容易に\n\n## ログ出力\n- [useIntersectionObserver] - observer の発動状況\n- [handleLoadMore] - ハンドラの実行状況\n- [getHouseWorksList] - 初期データ取得の状況\n- [loadMoreHouseWorks] - 追加データ取得の詳細\n\nこれらのログでブラウザコンソールから無限スクロール動作を追跡できます\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "mcp__mui-mcp__useMuiDocs"
     ],
     "deny": [],
     "ask": []
