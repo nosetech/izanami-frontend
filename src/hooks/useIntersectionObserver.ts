@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 /**
  * useIntersectionObserver Hook
@@ -8,45 +8,45 @@ import { useEffect, useRef } from 'react'
  *
  * @param callback - 要素が表示されたときに実行するコールバック関数
  * @param options - IntersectionObserverOptions
- * @returns ref - 監視対象の要素に設定するref
+ * @returns ref - 監視対象の要素に設定するref（Callback ref）
  */
 export const useIntersectionObserver = (
   callback: () => void,
   options?: IntersectionObserverInit,
 ) => {
-  const ref = useRef<HTMLDivElement>(null)
   const callbackRef = useRef(callback)
+  const observerRef = useRef<IntersectionObserver | null>(null)
 
   // コールバックの参照を更新
-  useEffect(() => {
-    callbackRef.current = callback
-  }, [callback])
+  callbackRef.current = callback
 
-  useEffect(() => {
-    if (!ref.current) return
-
-    const observer = new IntersectionObserver(([entry]) => {
-      // デバッグ: Intersection Observer の動作を確認
-      console.log(
-        '[useIntersectionObserver] isIntersecting:',
-        entry.isIntersecting,
-        'ratio:',
-        entry.intersectionRatio,
-      )
-
-      // 要素がビューポートに入ったときにコールバックを実行
-      if (entry.isIntersecting) {
-        console.log('[useIntersectionObserver] Calling callback')
-        callbackRef.current()
+  // Callback ref: DOM ノードが接続・切断されたときに実行される
+  const ref = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) {
+        if (observerRef.current) {
+          observerRef.current.disconnect()
+          observerRef.current = null
+        }
+        return
       }
-    }, options)
 
-    observer.observe(ref.current)
+      // 既に observer があれば切断
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [options])
+      // 新しい observer を作成
+      observerRef.current = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          callbackRef.current()
+        }
+      }, options)
+
+      observerRef.current.observe(node)
+    },
+    [options],
+  )
 
   return ref
 }

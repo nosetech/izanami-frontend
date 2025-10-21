@@ -38,14 +38,6 @@ export const useHouseWorks = () => {
           fetchPolicy: fetchNetworkOnly ? 'network-only' : 'cache-first',
         })
         const pageInfo = data?.houseworks?.pageInfo
-        console.log(
-          '[getHouseWorksList] Initial fetch - edges:',
-          data?.houseworks?.edges?.length,
-          'hasNextPage:',
-          pageInfo?.hasNextPage,
-          'endCursor:',
-          pageInfo?.endCursor,
-        )
         setHouseWorksList(data?.houseworks)
         setEndCursor(pageInfo?.endCursor ?? null)
         setHasNextPage(pageInfo?.hasNextPage ?? false)
@@ -65,24 +57,10 @@ export const useHouseWorks = () => {
       sort?: HouseworkSortInput,
       filter?: HouseworkFilterInput,
     ) => {
-      console.log(
-        '[loadMoreHouseWorks] Called with endCursor:',
-        endCursor,
-        'hasNextPage:',
-        hasNextPage,
-      )
-
-      if (!endCursor || !hasNextPage) {
-        console.log('[loadMoreHouseWorks] Returning early - no more pages')
-        return
-      }
+      if (!endCursor || !hasNextPage) return
 
       setIsLoadingMore(true)
       try {
-        console.log(
-          '[loadMoreHouseWorks] Fetching next page with after:',
-          endCursor,
-        )
         const { data } = await listHouseWorks({
           variables: {
             familyId: familyId,
@@ -94,36 +72,20 @@ export const useHouseWorks = () => {
         })
 
         const newEdges = data?.houseworks?.edges ?? []
-        console.log(
-          '[loadMoreHouseWorks] Fetched',
-          newEdges.length,
-          'new items',
-        )
 
         // 既存データと新規データを統合
         setHouseWorksList((prevList) => {
           if (!prevList) return data?.houseworks
 
-          const combined = {
+          return {
             ...data?.houseworks,
             edges: [...(prevList.edges ?? []), ...newEdges],
           }
-          console.log(
-            '[loadMoreHouseWorks] Total edges after merge:',
-            combined.edges?.length,
-          )
-          return combined
         })
 
         const newPageInfo = data?.houseworks?.pageInfo
         setEndCursor(newPageInfo?.endCursor ?? null)
         setHasNextPage(newPageInfo?.hasNextPage ?? false)
-        console.log(
-          '[loadMoreHouseWorks] Next page info - hasNextPage:',
-          newPageInfo?.hasNextPage,
-          'endCursor:',
-          newPageInfo?.endCursor,
-        )
       } catch (error) {
         console.error('Failed to load more house works:', error)
       } finally {

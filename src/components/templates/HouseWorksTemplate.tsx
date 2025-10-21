@@ -45,25 +45,9 @@ export function HouseWorksTemplate() {
 
   // 無限スクロール時に次ページを読み込む
   const handleLoadMore = useCallback(() => {
-    // デバッグ: 何度呼ばれているか確認
-    console.log(
-      '[handleLoadMore] Intersection detected - hasNextPage:',
-      hasNextPage,
-      'isLoadingMore:',
-      isLoadingMore,
-      'isHouseWorksLoading:',
-      isHouseWorksLoading,
-    )
-
     if (currentUser && hasNextPage && !isLoadingMore && !isHouseWorksLoading) {
-      console.log(
-        '[handleLoadMore] Loading more items... Current total:',
-        houseWorksList?.edges?.length,
-      )
       const sortParams = getSortParams(sortType)
       loadMoreHouseWorks(currentUser.family_id, sortParams, filter)
-    } else {
-      console.log('[handleLoadMore] Conditions not met')
     }
   }, [
     currentUser,
@@ -73,7 +57,6 @@ export function HouseWorksTemplate() {
     sortType,
     filter,
     loadMoreHouseWorks,
-    houseWorksList?.edges?.length,
   ])
 
   // Intersection Observer のオプションを useMemo で保持
