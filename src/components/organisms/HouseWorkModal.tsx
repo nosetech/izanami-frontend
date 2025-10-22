@@ -180,7 +180,13 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
     }
   }
 
-  const isUpdateDisabled = isEditMode && !isAdmin && housework?.committed
+  const isUpdateDisabled =
+    isEditMode &&
+    ((!isAdmin && housework?.committed) ||
+      (!isAdmin &&
+        !housework?.committed &&
+        currentUser &&
+        currentUser.id !== housework?.suggestedBy.id))
 
   const loading = createLoading || updateLoading
 
