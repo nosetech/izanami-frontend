@@ -385,10 +385,8 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
             py: 1,
           }}
         >
-          {isEditMode && canDelete() && (
-            <Box
-              sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}
-            >
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+            {isEditMode && canDelete() && (
               <Button
                 onClick={() => setDeleteConfirmOpen(true)}
                 variant='outlined'
@@ -397,8 +395,8 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
               >
                 削除
               </Button>
-            </Box>
-          )}
+            )}
+          </Box>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
             <Button
               onClick={handleFormSubmit(handleSubmit)}
