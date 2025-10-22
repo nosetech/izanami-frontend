@@ -1,3 +1,131 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`HouseWorks Page Snapshot Tests renders houseworks page unchanged 1`] = `null`;
+exports[`HouseWorks Page Snapshot Tests renders houseworks page unchanged 1`] = `
+<div
+  data-testid="base-layout"
+>
+  <div
+    className="MuiStack-root css-8ivdlr-MuiStack-root"
+  >
+    <h1
+      className="MuiTypography-root MuiTypography-h1 css-k2vred-MuiTypography-root"
+      style={{}}
+    >
+      House Work
+    </h1>
+    <button
+      data-testid="create-button"
+      onClick={[Function]}
+    >
+      新しい家事を作成
+    </button>
+    <input
+      data-testid="search-input"
+      onChange={[Function]}
+      placeholder="Search"
+      type="text"
+    />
+    <div
+      className="MuiStack-root css-d4c8l4-MuiStack-root"
+    >
+      <h2
+        className="MuiTypography-root MuiTypography-h2 css-olb543-MuiTypography-root"
+        style={{}}
+      >
+        検索結果
+        1
+        件
+      </h2>
+      <div
+        className="MuiStack-root css-12oqx5y-MuiStack-root"
+      >
+        <p
+          className="MuiTypography-root MuiTypography-body1 css-1mqrwxt-MuiTypography-root"
+          style={{}}
+        >
+          並べ替え
+        </p>
+        <div
+          className="MuiFormControl-root css-1iw3t7y-MuiFormControl-root"
+        >
+          <div
+            className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiSelect-root css-ogi431-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+            onClick={[Function]}
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-labelledby="demo-simple-select-label demo-simple-select"
+              className="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1nomnpv-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
+              id="demo-simple-select"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              ref={[Function]}
+              role="combobox"
+              tabIndex={0}
+            >
+              作成日時:近い順
+            </div>
+            <input
+              aria-hidden={true}
+              aria-invalid={false}
+              className="MuiSelect-nativeInput css-j0riat-MuiSelect-nativeInput"
+              disabled={false}
+              onAnimationStart={[Function]}
+              onChange={[Function]}
+              ref={
+                {
+                  "current": null,
+                }
+              }
+              required={false}
+              tabIndex={-1}
+              value="10"
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-c6cr3d-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ArrowDropDownIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden={true}
+              className="MuiOutlinedInput-notchedOutline css-1ll44ll-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                className="css-w4cd9x"
+              >
+                <span
+                  aria-hidden={true}
+                  className="notranslate"
+                >
+                  ​
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="MuiStack-root css-1rfum5-MuiStack-root"
+    >
+      <div
+        data-testid="housework-card-housework-1"
+        onClick={[Function]}
+        role="button"
+        tabIndex={0}
+      >
+        Clean kitchen
+      </div>
+    </div>
+  </div>
+</div>
+`;

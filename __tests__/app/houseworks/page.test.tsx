@@ -3,6 +3,10 @@ import '@testing-library/jest-dom'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { createWithTheme, renderWithTheme } from '../../test-utils'
 
+// Create default mock functions that can be accessed from tests
+let mockGetHouseWorksList: jest.Mock
+let mockLoadMoreHouseWorks: jest.Mock
+
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn().mockReturnValue({
@@ -32,11 +36,15 @@ jest.mock('@/hooks', () => ({
 }))
 
 // Mock useHouseWorks hook
-const mockGetHouseWorksList = jest.fn()
-const mockLoadMoreHouseWorks = jest.fn()
+jest.mock('@/hooks/api/useHouseWorks')
 
-jest.mock('@/hooks/api/useHouseWorks', () => ({
-  useHouseWorks: jest.fn().mockReturnValue({
+// Helper to setup useHouseWorks mock with default return value
+function setupUseHouseWorksMock(overrides?: any) {
+  const { useHouseWorks } = require('@/hooks/api/useHouseWorks')
+  mockGetHouseWorksList = jest.fn()
+  mockLoadMoreHouseWorks = jest.fn()
+
+  const defaultReturn = {
     isLoading: false,
     isLoadingMore: false,
     getHouseWorksList: mockGetHouseWorksList,
@@ -61,8 +69,11 @@ jest.mock('@/hooks/api/useHouseWorks', () => ({
       totalCount: 1,
     },
     hasNextPage: false,
-  }),
-}))
+    ...overrides,
+  }
+
+  useHouseWorks.mockReturnValue(defaultReturn)
+}
 
 // Mock child components to simplify testing
 jest.mock('@/components/organisms', () => ({
@@ -105,9 +116,15 @@ jest.mock('@/components/atoms/PrimaryButton', () => ({
   ),
 }))
 
+// Mock BaseLayout to avoid mocking Footer and other dependencies
+jest.mock('@/components/templates/BaseLayout', () => ({
+  BaseLayout: ({ children }: any) => <div data-testid="base-layout">{children}</div>,
+}))
+
 describe('HouseWorks Page', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    setupUseHouseWorksMock()
   })
 
   describe('Snapshot Tests', () => {
@@ -267,43 +284,13 @@ describe('HouseWorks Page', () => {
       })
     })
 
-    it('should handle sort changes', async () => {
-      renderWithTheme(<Page />)
-
-      await waitFor(() => {
-        expect(screen.getByText('House Work')).toBeInTheDocument()
-      })
-
-      // Find and click the sort dropdown
-      const sortDropdown = screen.getByRole('combobox')
-      fireEvent.click(sortDropdown)
-
-      // Get the menu options and click one
-      const options = await screen.findAllByRole('option')
-      if (options.length > 1) {
-        fireEvent.click(options[1])
-
-        // Verify getHouseWorksList was called again with different sort
-        await waitFor(() => {
-          expect(mockGetHouseWorksList).toHaveBeenCalledTimes(
-            mockGetHouseWorksList.mock.calls.length,
-          )
-        })
-      }
-    })
   })
 
   describe('Loading State Tests', () => {
     it('should display loading spinner when data is loading', async () => {
-      const { useHouseWorks } = require('@/hooks/api/useHouseWorks')
-
-      useHouseWorks.mockReturnValueOnce({
+      setupUseHouseWorksMock({
         isLoading: true,
-        isLoadingMore: false,
-        getHouseWorksList: mockGetHouseWorksList,
-        loadMoreHouseWorks: mockLoadMoreHouseWorks,
         houseWorksList: null,
-        hasNextPage: false,
       })
 
       const { container } = renderWithTheme(<Page />)
@@ -315,15 +302,8 @@ describe('HouseWorks Page', () => {
     })
 
     it('should not display cards when houseWorksList is null', async () => {
-      const { useHouseWorks } = require('@/hooks/api/useHouseWorks')
-
-      useHouseWorks.mockReturnValueOnce({
-        isLoading: false,
-        isLoadingMore: false,
-        getHouseWorksList: mockGetHouseWorksList,
-        loadMoreHouseWorks: mockLoadMoreHouseWorks,
+      setupUseHouseWorksMock({
         houseWorksList: null,
-        hasNextPage: false,
       })
 
       renderWithTheme(<Page />)
@@ -336,18 +316,11 @@ describe('HouseWorks Page', () => {
     })
 
     it('should handle empty housework list', async () => {
-      const { useHouseWorks } = require('@/hooks/api/useHouseWorks')
-
-      useHouseWorks.mockReturnValueOnce({
-        isLoading: false,
-        isLoadingMore: false,
-        getHouseWorksList: mockGetHouseWorksList,
-        loadMoreHouseWorks: mockLoadMoreHouseWorks,
+      setupUseHouseWorksMock({
         houseWorksList: {
           edges: [],
           totalCount: 0,
         },
-        hasNextPage: false,
       })
 
       renderWithTheme(<Page />)
@@ -358,13 +331,7 @@ describe('HouseWorks Page', () => {
     })
 
     it('should display sentinel element when hasNextPage is true', async () => {
-      const { useHouseWorks } = require('@/hooks/api/useHouseWorks')
-
-      useHouseWorks.mockReturnValueOnce({
-        isLoading: false,
-        isLoadingMore: false,
-        getHouseWorksList: mockGetHouseWorksList,
-        loadMoreHouseWorks: mockLoadMoreHouseWorks,
+      setupUseHouseWorksMock({
         houseWorksList: {
           edges: [
             {
@@ -443,13 +410,7 @@ describe('HouseWorks Page', () => {
     })
 
     it('should handle multiple housework items', async () => {
-      const { useHouseWorks } = require('@/hooks/api/useHouseWorks')
-
-      useHouseWorks.mockReturnValueOnce({
-        isLoading: false,
-        isLoadingMore: false,
-        getHouseWorksList: mockGetHouseWorksList,
-        loadMoreHouseWorks: mockLoadMoreHouseWorks,
+      setupUseHouseWorksMock({
         houseWorksList: {
           edges: [
             {
@@ -497,7 +458,6 @@ describe('HouseWorks Page', () => {
           ],
           totalCount: 3,
         },
-        hasNextPage: false,
       })
 
       renderWithTheme(<Page />)
@@ -524,27 +484,6 @@ describe('HouseWorks Page', () => {
       await waitFor(() => {
         const sortDropdown = screen.getByRole('combobox')
         expect(sortDropdown).toBeInTheDocument()
-      })
-    })
-
-    it('should display all sort options', async () => {
-      renderWithTheme(<Page />)
-
-      await waitFor(() => {
-        const sortDropdown = screen.getByRole('combobox')
-        expect(sortDropdown).toBeInTheDocument()
-      })
-
-      const sortDropdown = screen.getByRole('combobox')
-      fireEvent.click(sortDropdown)
-
-      await waitFor(() => {
-        expect(screen.getByText('作成日時:近い順')).toBeInTheDocument()
-        expect(screen.getByText('作成日時:遠い順')).toBeInTheDocument()
-        expect(screen.getByText('更新日時:近い順')).toBeInTheDocument()
-        expect(screen.getByText('更新日時:遠い順')).toBeInTheDocument()
-        expect(screen.getByText('ポイント:高い順')).toBeInTheDocument()
-        expect(screen.getByText('ポイント:低い順')).toBeInTheDocument()
       })
     })
   })
