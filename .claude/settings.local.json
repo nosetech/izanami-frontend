@@ -14,7 +14,12 @@
       "Bash(yarn add zustand)",
       "Bash(find:*)",
       "Bash(yarn format:check)",
-      "mcp__mui-mcp__useMuiDocs"
+      "mcp__mui-mcp__useMuiDocs",
+      "Bash(gh pr view:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr comment:*)",
+      "mcp__inkdrop__read-note",
+      "mcp__inkdrop__update-note"
     ],
     "deny": [],
     "ask": []
