@@ -73,3 +73,10 @@ mutation updateHousework(
     errors
   }
 }
+
+mutation deleteHousework($id: ID!) {
+  deleteHousework(input: { id: $id }) {
+    success
+    errors
+  }
+}

@@ -217,6 +217,7 @@ export function HouseWorksTemplate() {
         housework={selectedHousework}
         isAdmin={isAdmin}
         onSuccess={handleModalSuccess}
+        onDelete={handleModalSuccess}
       />
     </Stack>
   )

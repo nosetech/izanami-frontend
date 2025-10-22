@@ -346,6 +346,19 @@ export type UpdateHouseworkMutation = {
   } | null
 }
 
+export type DeleteHouseworkMutationVariables = Exact<{
+  id: Scalars['ID']['input']
+}>
+
+export type DeleteHouseworkMutation = {
+  __typename?: 'Mutation'
+  deleteHousework?: {
+    __typename?: 'DeleteHouseworkMutationPayload'
+    success: boolean
+    errors: Array<string>
+  } | null
+}
+
 export type ListHouseWorksQueryVariables = Exact<{
   familyId: Scalars['ID']['input']
   sort?: InputMaybe<HouseworkSortInput>
@@ -478,6 +491,14 @@ export const UpdateHouseworkDocument = gql`
     }
   }
 `
+export const DeleteHouseworkDocument = gql`
+  mutation deleteHousework($id: ID!) {
+    deleteHousework(input: { id: $id }) {
+      success
+      errors
+    }
+  }
+`
 export const ListHouseWorksDocument = gql`
   query listHouseWorks(
     $familyId: ID!
@@ -591,6 +612,24 @@ export function getSdk(
             signal,
           }),
         'updateHousework',
+        'mutation',
+        variables,
+      )
+    },
+    deleteHousework(
+      variables: DeleteHouseworkMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders,
+      signal?: RequestInit['signal'],
+    ): Promise<DeleteHouseworkMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DeleteHouseworkMutation>({
+            document: DeleteHouseworkDocument,
+            variables,
+            requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+            signal,
+          }),
+        'deleteHousework',
         'mutation',
         variables,
       )

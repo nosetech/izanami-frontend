@@ -3,10 +3,12 @@
 import { ToggleButton } from '@/components/atoms'
 import {
   CreateHouseworkDocument,
+  DeleteHouseworkDocument,
   Housework,
   HouseworkCategoryEnum,
   UpdateHouseworkDocument,
 } from '@/graphql/generated/components'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { useMutation } from '@apollo/client'
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
@@ -26,7 +28,7 @@ import {
   TextField,
   ToggleButtonGroup,
 } from '@mui/material'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as yup from 'yup'
@@ -46,6 +48,7 @@ export type HouseWorkModalProps = {
   housework?: Housework | null
   isAdmin: boolean
   onSuccess?: () => void
+  onDelete?: () => void
 }
 
 const schema = yup.object({
@@ -67,8 +70,10 @@ const TOGGLE_BUTTON_STYLE = {
 }
 
 export const HouseWorkModal = (props: HouseWorkModalProps) => {
-  const { open, onClose, housework, isAdmin, onSuccess } = props
+  const { open, onClose, housework, isAdmin, onSuccess, onDelete } = props
   const isEditMode = !!housework
+  const { currentUser } = useCurrentUser()
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   // Form state with react-hook-form
   const {
@@ -95,6 +100,9 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
   )
   const [updateHousework, { loading: updateLoading }] = useMutation(
     UpdateHouseworkDocument,
+  )
+  const [deleteHousework, { loading: deleteLoading }] = useMutation(
+    DeleteHouseworkDocument,
   )
 
   // Initialize form with housework data when editing
@@ -175,6 +183,48 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
   const isUpdateDisabled = isEditMode && !isAdmin && housework?.committed
 
   const loading = createLoading || updateLoading
+
+  // 削除権限の判定
+  const canDelete = (): boolean => {
+    if (!isEditMode || !housework || !currentUser) return false
+
+    const isCreator = currentUser.id === housework.suggestedBy.id
+    const isApproved = housework.committed
+
+    // 未承認の家事：管理者 OR 作成者
+    if (!isApproved) {
+      return isAdmin || isCreator
+    }
+
+    // 承認済みの家事：管理者のみ
+    return isAdmin
+  }
+
+  // 削除処理
+  const handleDelete = async () => {
+    if (!housework) return
+
+    try {
+      const { data: result } = await deleteHousework({
+        variables: {
+          id: housework.id,
+        },
+      })
+
+      if (result?.deleteHousework?.errors.length) {
+        toast.error(`削除エラー: ${result.deleteHousework.errors.join(', ')}`)
+        return
+      }
+
+      toast.success('家事を削除しました')
+      onDelete?.()
+      setDeleteConfirmOpen(false)
+      onClose()
+    } catch (error) {
+      console.error('Failed to delete housework:', error)
+      toast.error('削除処理中にエラーが発生しました')
+    }
+  }
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='tablet' fullWidth>
@@ -335,7 +385,20 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
             py: 1,
           }}
         >
-          <Box sx={{ flex: 1 }} />
+          {isEditMode && canDelete() && (
+            <Box
+              sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}
+            >
+              <Button
+                onClick={() => setDeleteConfirmOpen(true)}
+                variant='outlined'
+                color='error'
+                disabled={loading || deleteLoading}
+              >
+                削除
+              </Button>
+            </Box>
+          )}
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
             <Button
               onClick={handleFormSubmit(handleSubmit)}
@@ -353,6 +416,38 @@ export const HouseWorkModal = (props: HouseWorkModalProps) => {
           </Box>
         </Box>
       </DialogActions>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+      >
+        <DialogTitle>削除確認</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 1 }}>
+            家事「{housework?.title}」を削除してもよろしいですか？
+            <br />
+            この操作は取り消せません。
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteConfirmOpen(false)}
+            variant='outlined'
+            disabled={deleteLoading}
+          >
+            キャンセル
+          </Button>
+          <Button
+            onClick={handleDelete}
+            variant='contained'
+            color='error'
+            disabled={deleteLoading}
+          >
+            削除
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   )
 }
