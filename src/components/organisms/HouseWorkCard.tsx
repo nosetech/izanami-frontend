@@ -108,7 +108,7 @@ export const HouseWorkCard = (props: HouseWorkCardProps) => {
   return (
     <Card
       sx={{
-        width: '250px',
+        width: '260px',
         boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 20%)',
         position: 'relative',
       }}
